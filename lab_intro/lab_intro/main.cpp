@@ -15,7 +15,7 @@ int main() {
   result = grayscale(png);
   result.writeToFile("out-grayscale.png");
   
-  result = createSpotlight(png, 300, -1);
+  result = createSpotlight(png, 300, 300);
   result.writeToFile("out-spotlight.png");
 
   result = ubcify(png);
