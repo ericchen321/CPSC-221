@@ -113,6 +113,15 @@ PNG ubcify(PNG image) {
 * @return The watermarked image.
 */
 PNG watermark(PNG firstImage, PNG secondImage) {
+  for (unsigned x = 0; x < secondImage.width(); x++) {
+    for (unsigned y = 0; y < secondImage.height(); y++) {
+      HSLAPixel *second_pixel = secondImage.getPixel(x,y);
+      if (second_pixel->l == 1.0 && x<firstImage.width() && y<firstImage.height()){
+        HSLAPixel *first_pixel = firstImage.getPixel(x,y);
+        first_pixel->l = (first_pixel->l + 0.2 > 1.0)? 1.0 : (first_pixel->l + 0.2);
+      }
+    }
+  }
 
   return firstImage;
 }
