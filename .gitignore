@@ -1,4 +1,4 @@
-#from Bole Ma
+# from Bole Ma, modified by Eric Chen
 
 # Prerequisites
 *.d
@@ -32,3 +32,6 @@
 *.exe
 *.out
 *.app
+
+# Images
+*.png
