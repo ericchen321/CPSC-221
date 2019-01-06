@@ -82,6 +82,19 @@ PNG createSpotlight(PNG image, int centerX, int centerY) {
  * @return The UBCify'd image.
 **/
 PNG ubcify(PNG image) {
+  const double UBC_YELLOW = 40;
+  const double UBC_BLUE = 210;
+  for (unsigned x = 0; x < image.width(); x++) {
+    for (unsigned y = 0; y < image.height(); y++) {
+      HSLAPixel *pixel = image.getPixel(x, y);
+      if (abs(pixel->h - UBC_YELLOW) <= abs(pixel->h - UBC_BLUE)){
+        pixel->h = UBC_YELLOW;
+      }
+      else{
+        pixel->h = UBC_BLUE;
+      }
+    }
+  }
 
   return image;
 }
