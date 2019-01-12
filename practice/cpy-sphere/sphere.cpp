@@ -1,8 +1,5 @@
 #include "sphere.h"
 
-class sphere{
-public:
-
 // copy constructor
 sphere::sphere(const sphere &orig){
     theRadius = orig.theRadius;
@@ -12,4 +9,3 @@ sphere::sphere(const sphere &orig){
         atts[i] = orig.atts[i]; // Q: why ccstor need for heap?
     }
 }
-};
