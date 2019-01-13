@@ -1,5 +1,8 @@
 # from Bole Ma, modified by Eric Chen
 
+# vscode folder
+.vscode/
+
 # Prerequisites
 *.d
 
