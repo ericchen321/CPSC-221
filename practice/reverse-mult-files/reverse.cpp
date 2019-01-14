@@ -19,9 +19,22 @@ node* insert_to_end(node* a, node* head){
     return head;
 }
 
+/*
 node* reverse(node* curr){
     if (curr == NULL){
         return curr;
     }
     return insert_to_end(curr, reverse(curr->next));
+}
+*/
+
+node* reverse(node* curr){
+    if (curr != NULL && curr->next != NULL){
+        node *t = curr->next;
+        node *rR = reverse(curr->next);
+        t->next = curr;
+        curr->next = NULL;
+        return rR;
+    }
+    return curr;
 }

@@ -1,4 +1,4 @@
-EXENAME = reverse_linked_list
+EXENAME = reverse_linked_list.out
 OBJS = main.o node.o reverse.o print.o
 
 CXX = clang++
