@@ -14,10 +14,17 @@ int main(){
     }
     n[4]->next = NULL;
 
+    /* testing reverse
     node::print(n[0]);
     cout << endl;
     node *n_rev = node::reverse(n[0]);
     node::print(n_rev);
+    cout << endl;
+    */
+
+   /* testing printReverseODDS
+   */
+    node::printReverseODDS(n[0]);
     cout << endl;
     
     for(int i=0; i<5; i++){

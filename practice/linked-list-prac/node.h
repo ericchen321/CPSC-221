@@ -12,6 +12,11 @@ class node{
 
         // effects: returns ptr to the head of the reversed linked list
         static node* reverse(node* curr);
+
+        // effects: print the linked list starting from given node in reversed
+        //          order, and only prints values at odd indicies (1-based
+        //          indexing)
+        static void printReverseODDS(node* curr);
 };
 
 #endif
