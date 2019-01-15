@@ -24,10 +24,14 @@ void Block::greyscale(){
 	// stub
 }
 
+/*  Returns the width of the current block
+*/
 int Block::width() const {
 	return 0; // stub FIXME
 }
 
+/* Returns the height of the current block.
+*/
 int Block::height() const {
   return 0; // stub FIXME
 }
