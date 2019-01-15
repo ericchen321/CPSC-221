@@ -26,7 +26,10 @@ int main() {
 
 
 PNG expected1; expected1.readFromFile("images/given-blocktest.png");
-if (expected1 == result1) cout<< "block passed" << endl;
+if (expected1 == result1)
+   cout<< "block passed" << endl;
+else
+   cout<< "block failed" << endl;
 
 //chain
    Chain c(png1,12); // img, number of strips.
@@ -39,9 +42,15 @@ if (expected1 == result1) cout<< "block passed" << endl;
    result2r.writeToFile("images/out-moveBackReverse.png");
 
 PNG expected2; expected2.readFromFile("images/given-moveBack.png");
-if (expected2 == result2) cout<< "moveBack passed" << endl;
+if (expected2 == result2) 
+   cout<< "moveBack passed" << endl;
+else
+   cout<< "moveBack failed" << endl;
 PNG expected2r; expected2r.readFromFile("images/given-moveBackReverse.png");
-if (expected2r == result2r) cout<< "moveBackReverse passed" << endl;
+if (expected2r == result2r) 
+   cout<< "moveBackReverse passed" << endl;
+else
+   cout<< "moveBackReverse failed" << endl;
 
 
    Chain d(png1,16);
@@ -52,9 +61,15 @@ if (expected2r == result2r) cout<< "moveBackReverse passed" << endl;
    result3r.writeToFile("images/out-reverseEasyReverse.png");
 
 PNG expected3; expected3.readFromFile("images/given-reverseEasy.png");
-if (expected3 == result3) cout<< "reverseEasy passed" << endl;
+if (expected3 == result3) 
+   cout<< "reverseEasy passed" << endl;
+else
+   cout<< "reverseEasy failed" << endl;
 PNG expected3r; expected3r.readFromFile("images/given-reverseEasyReverse.png");
-if (expected3r == result3r) cout<< "reverseEasyReverse passed" << endl;
+if (expected3r == result3r) 
+   cout<< "reverseEasyReverse passed" << endl;
+else
+   cout<< "reverseEasyReverse failed" << endl;
 
    Chain e(png1,36);
    Chain g(e); // quick test of copy constructor
@@ -66,9 +81,15 @@ if (expected3r == result3r) cout<< "reverseEasyReverse passed" << endl;
    result8.writeToFile("images/out-weaveRenderBack.png");
 
 PNG expected6; expected6.readFromFile("images/given-weaveSameSize.png");
-if (expected6 == result6) cout<< "weaveSameSize passed" << endl;
+if (expected6 == result6) 
+   cout<< "weaveSameSize passed" << endl;
+else
+   cout<< "weaveSameSize failed" << endl;
 PNG expected8; expected8.readFromFile("images/given-weaveRenderBack.png");
-if (expected8 == result8) cout<< "weaveRenderBack passed" << endl;
+if (expected8 == result8) 
+   cout<< "weaveRenderBack passed" << endl;
+else
+   cout<< "weaveRenderBack failed" << endl;
 
    return 0;
 }
