@@ -17,6 +17,12 @@ class node{
         //          order, and only prints values at odd indicies (1-based
         //          indexing)
         static void printReverseODDS(node* curr);
+    
+    private:
+        // requires: pos >= 1
+        // effects: prints the linked list starting from curr in reversed
+        //          order; if pos is odd then print, otherwise do not print
+        static void printReverseODDS(node* curr, int pos);
 };
 
 #endif
