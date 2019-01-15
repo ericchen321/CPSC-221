@@ -21,7 +21,7 @@ int main() {
    Block b;
    b.build(png1,20,150); // grab a strip of png1 starting at 20, and 150p wide.
    b.greyscale(); // change the block to be grey
-   b.render(result1,20); //put the ubcified strip onto a new image.
+   b.render(result1,20); //FIXME: "ubcified"??? put the ubcified strip onto a new image.
    result1.writeToFile("images/out-blocktest.png");
 
 
