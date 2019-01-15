@@ -14,10 +14,10 @@ int main(){
     }
     n[4]->next = NULL;
 
-    (*n[0]).print(n[0]);
+    node::print(n[0]);
     cout << endl;
-    node *n_rev = (*n[0]).reverse(n[0]);
-    (*n[0]).print(n_rev);
+    node *n_rev = node::reverse(n[0]);
+    node::print(n_rev);
     cout << endl;
     
     for(int i=0; i<5; i++){
