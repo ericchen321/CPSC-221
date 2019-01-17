@@ -43,7 +43,7 @@ void Chain::insertBack(const Block & ndata){
  */
 void Chain::moveBack(int startPos, int len, int dist){
   /* your code here */
-  // FIXME:now consider startPos <= length
+  // FIXME:for now consider startPos <= length
   if (startPos + len - 1 + dist > length_){
     dist = length_ - startPos - len + 1;
   }
