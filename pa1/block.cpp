@@ -24,6 +24,7 @@ void Block::build(PNG & im, int column, int width){
 }
 
 /* requires: column + block width <= im.width()
+             FIXME: consider fix this later
    effects: Draws the current block at position
             (column,0) in im.
 */
