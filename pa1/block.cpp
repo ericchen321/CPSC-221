@@ -12,6 +12,7 @@
 void Block::build(PNG & im, int column, int width){
   unsigned int col_bound = column + width;
   unsigned int row_bound = im.height();
+
   data.resize(im.height());
   for (unsigned int row=0; row<row_bound; row++){
     data[row].resize(width);
@@ -31,7 +32,9 @@ void Block::build(PNG & im, int column, int width){
 void Block::render(PNG & im, int column) const {
 	if (!(column>=0 && (unsigned)column<im.width()))
     return;
+  
   unsigned int col_bound = (column + width() > im.width())? im.width() : (column + width());
+  
   for (unsigned int col = column; col<col_bound; col++){
     for (unsigned int row = 0; row<im.height(); row++){
       *(im.getPixel(col, row)) = data[row][col-(unsigned)column];
@@ -44,8 +47,8 @@ void Block::render(PNG & im, int column) const {
    removes the color, leaving grey.
 */
 void Block::greyscale(){
-	for (int x = 0; x < width(); x++) {
-    for (int y = 0; y < height(); y++) {
+	for (unsigned int x = 0; x < (unsigned int)width(); x++) {
+    for (unsigned int y = 0; y < (unsigned int)height(); y++) {
       data[y][x].s = 0;
     }
   }
