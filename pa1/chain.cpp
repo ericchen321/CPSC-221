@@ -18,7 +18,15 @@ Chain::~Chain(){
  * @param ndata The data to be inserted.
  */
 void Chain::insertBack(const Block & ndata){
-  /* your code here */
+  Node* new_node = new Node(ndata);
+  Node* tail = head_->prev;
+  new_node->next = head_;
+  new_node->prev = tail;
+  tail->next = new_node;
+  head_->prev = new_node;
+  length_ = length_ + 1;
+  height_ = ndata.height();
+  width_ = ndata.width();
 }
 
 /**
@@ -35,6 +43,33 @@ void Chain::insertBack(const Block & ndata){
  */
 void Chain::moveBack(int startPos, int len, int dist){
   /* your code here */
+  // FIXME:now consider startPos <= length
+  if (startPos + len - 1 + dist > length_){
+    dist = length_ - startPos - len + 1;
+  }
+  if (length_ == 0 || dist <= 0){
+    return;
+  }
+  else{
+    Node* startNode = head_;
+    for (int i=0; i<startPos; i++){
+      startNode = startNode->next;
+    }
+    Node* endNode = startNode;
+    for (int i=startPos; i<startPos+len-1; i++){
+      endNode = endNode->next;
+    }
+    Node* a = startNode->prev;
+    Node* b = endNode->next;
+    Node* c = endNode->next->next;
+    a->next = b;
+    b->prev = a;
+    b->next = startNode;
+    startNode->prev = b;
+    endNode->next = c;
+    c->prev = endNode;
+    moveBack(startPos+1, len, dist-1);
+  }
 }
 
 /**
