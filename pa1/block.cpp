@@ -23,7 +23,8 @@ void Block::build(PNG & im, int column, int width){
   //cout << "block height " << data.size() << endl;
 }
 
-/* effects: Draws the current block at position
+/* requires: column + block width <= im.width()
+   effects: Draws the current block at position
             (column,0) in im.
 */
 void Block::render(PNG & im, int column) const {
