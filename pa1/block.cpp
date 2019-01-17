@@ -29,7 +29,7 @@ void Block::build(PNG & im, int column, int width){
             (column,0) in im.
 */
 void Block::render(PNG & im, int column) const {
-	if (!(column>=0 && column<im.width()))
+	if (!(column>=0 && (unsigned)column<im.width()))
     return;
   unsigned int col_bound = (column + width() > im.width())? im.width() : (column + width());
   for (unsigned int col = column; col<col_bound; col++){
@@ -44,8 +44,8 @@ void Block::render(PNG & im, int column) const {
    removes the color, leaving grey.
 */
 void Block::greyscale(){
-	for (unsigned x = 0; x < width(); x++) {
-    for (unsigned y = 0; y < height(); y++) {
+	for (int x = 0; x < width(); x++) {
+    for (int y = 0; y < height(); y++) {
       data[y][x].s = 0;
     }
   }
