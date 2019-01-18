@@ -15,8 +15,8 @@ PNG* setupOutput(unsigned w, unsigned h) {
 
 // Returns my favorite color
 HSLAPixel* myFavoriteColor(double saturation) {
-    HSLAPixel pixel(170, saturation, 0.5);
-    return &pixel;
+    HSLAPixel* pixel = new HSLAPixel(170, saturation, 0.5);
+    return pixel;
 }
 
 // Returns a score determining if the pixel is an edge
@@ -42,11 +42,13 @@ double edgeScore(PNG* im, unsigned x, unsigned y) {
 
 void sketchify(std::string inputFile, std::string outputFile) {
     // Load in.png
-    PNG* original = NULL;
+    PNG* original = new PNG();
 
+    cout << "Reached line 46" << endl;
     original->readFromFile(inputFile);
     unsigned width = original->width();
     unsigned height = original->height();
+    cout << "Reached line 50" << endl;
 
     // Create out.png
     PNG* output = setupOutput(width, height);
@@ -56,8 +58,8 @@ void sketchify(std::string inputFile, std::string outputFile) {
 
     // Go over the whole image, and if a pixel is likely to be an edge,
     // color it my favorite color in the output
-    for (unsigned y = 1; y < height; y++) {
-        for (unsigned x = 1; x < width; x++) {
+    for (unsigned y = 1; y < height-1; y++) {
+        for (unsigned x = 1; x < width-1; x++) {
 
             // calculate how "edge-like" a pixel is
             double score = edgeScore(original, x, y);
@@ -66,7 +68,7 @@ void sketchify(std::string inputFile, std::string outputFile) {
             // If the pixel is an edge pixel,
             // color the output pixel with my favorite color
             if (score > 0.3) {
-                currOutPixel = myPixel;
+                *currOutPixel = *myPixel;
             }
         }
     }
