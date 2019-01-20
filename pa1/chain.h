@@ -207,6 +207,16 @@ private:
     * You must use these as specified in the writeup and may not rename them.
     * You may place more functions here as you need them.
     */
+
+   /*
+    * requires: length != 0 AND
+    *           len != 0 AND
+    *           startPos >= 1 AND
+    *           startPos + len - 1 <= length
+    * effects: move the subchain of len nodes, starting at
+    * startPos, toward the end of the chain by 1 position.
+    */
+   void move_by_one(int startPos, int len);
    
    /* requires: pos1 < pos2
     * effects: swaps node at pos1 and at pos2

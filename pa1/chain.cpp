@@ -51,25 +51,29 @@ void Chain::moveBack(int startPos, int len, int dist){
     return;
   }
   else{
-    Node* startNode = head_;
-    for (int i=0; i<startPos; i++){
-      startNode = startNode->next;
-    }
-    Node* endNode = startNode;
-    for (int i=startPos; i<startPos+len-1; i++){
-      endNode = endNode->next;
-    }
-    Node* a = startNode->prev;
-    Node* b = endNode->next;
-    Node* c = endNode->next->next;
-    a->next = b;
-    b->prev = a;
-    b->next = startNode;
-    startNode->prev = b;
-    endNode->next = c;
-    c->prev = endNode;
+    move_by_one(startPos, len);
     moveBack(startPos+1, len, dist-1);
   }
+}
+
+void Chain::move_by_one(int startPos, int len){
+  Node* startNode = head_;
+  for (int i=0; i<startPos; i++){
+    startNode = startNode->next;
+  }
+  Node* endNode = startNode;
+  for (int i=startPos; i<startPos+len-1; i++){
+    endNode = endNode->next;
+  }
+  Node* a = startNode->prev;
+  Node* b = endNode->next;
+  Node* c = endNode->next->next;
+  a->next = b;
+  b->prev = a;
+  b->next = startNode;
+  startNode->prev = b;
+  endNode->next = c;
+  c->prev = endNode;
 }
 
 /**
