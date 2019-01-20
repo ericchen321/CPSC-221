@@ -207,6 +207,11 @@ private:
     * You must use these as specified in the writeup and may not rename them.
     * You may place more functions here as you need them.
     */
+   
+   /* requires: pos1 < pos2
+    * effects: swaps node at pos1 and at pos2
+    */
+   void swap_node(int pos1, int pos2);
 
    /* =================== private given functions ============== */
 

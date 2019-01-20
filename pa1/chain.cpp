@@ -47,7 +47,7 @@ void Chain::moveBack(int startPos, int len, int dist){
   if (startPos + len - 1 + dist > length_){
     dist = length_ - startPos - len + 1;
   }
-  if (length_ == 0 || dist <= 0){
+  if (length_ == 0 || len == 0 || dist <= 0){
     return;
   }
   else{
@@ -80,6 +80,7 @@ void Chain::moveBack(int startPos, int len, int dist){
  */
 void Chain::roll(int k){
   /* your code here */
+  // TODO: need to do this!!!
 }
 
 /**
@@ -91,6 +92,55 @@ void Chain::roll(int k){
  */
 void Chain::reverseSub(int pos1, int pos2){
   /* your code here */
+  if (pos1 == pos2){
+    return;
+  }
+  else if (pos1 == (pos2 - 1)){
+    swap_node(pos1, pos2);
+    return;
+  }
+  else{
+    swap_node(pos1, pos2);
+    reverseSub(pos1+1, pos2-1);
+  }
+}
+
+void Chain::swap_node(int pos1, int pos2){
+  int cnt;
+  Node* pos1_node = head_;
+  Node* pos2_node = head_;
+
+  for(cnt=0; cnt<pos1; cnt++){
+    pos1_node = pos1_node->next;
+  }
+
+  for(cnt=0; cnt<pos2; cnt++){
+    pos2_node = pos2_node->next;
+  }
+
+  Node* pos1_node_prev = pos1_node->prev;
+  Node* pos1_node_next = pos1_node->next;
+  Node* pos2_node_prev = pos2_node->prev;
+  Node* pos2_node_next = pos2_node->next;
+
+  if(pos1 == pos2 - 1){
+    pos1_node_prev->next = pos2_node;
+    pos2_node_next->prev = pos1_node;
+    pos1_node->prev = pos2_node;
+    pos1_node->next = pos2_node_next;
+    pos2_node->prev = pos1_node_prev;
+    pos2_node->next = pos1_node;
+  }
+  else{
+    pos1_node_prev->next = pos2_node;
+    pos1_node_next->prev = pos2_node;
+    pos1_node->prev = pos2_node_prev;
+    pos1_node->next = pos2_node_next;
+    pos2_node_prev->next = pos1_node;
+    pos2_node_next->prev = pos1_node;
+    pos2_node->prev = pos1_node_prev;
+    pos2_node->next = pos1_node_next;
+  }
 }
 
 /*
