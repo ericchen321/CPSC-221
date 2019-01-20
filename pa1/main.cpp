@@ -73,6 +73,14 @@ else
 
    Chain e(png1,36);
    Chain g(e); // quick test of copy constructor
+   PNG result9 = g.render(36);
+   result9.writeToFile("images/out-cpy-constructor-test.png");
+PNG expected9 = png1;
+if (expected9 == result9)
+   cout << "copy constructor test passed" << endl;
+else
+   cout << "copy constructor test failed" << endl;
+
    Chain f(result1,36);
    g.weave(f);
    PNG result6 = g.render(64); // deliberately rendering only part

@@ -163,8 +163,12 @@ void Chain::swap_node(int pos1, int pos2){
 */
 void Chain::weave(Chain & other) { // leaves other empty.
   /* your code here */
-  Node* cursor = head_;
+  Node* cursor = head_->next;
   if (!(height_ == other.height_ && width_==other.width_)){
+    cout << "current height: " << height_ << endl;
+    cout << "current width: " << width_ << endl;
+    cout << "other's height: " << other.height_ << endl;
+    cout << "other's width: " << other.width_ << endl;
     cout << "Block sizes differ." << endl;
   }
   else {
@@ -177,14 +181,37 @@ void Chain::weave_recursive(Chain & other, Node* cursor){
     return;
   }
   else if(cursor->next == head_ && other.length_ != 0){
-    // TODO: may need recursively copying node from other to current
+    Node* other_first_node = other.head_->next;
+    Node* other_first_node_next = other_first_node->next;
+    insert_node(cursor, other_first_node);  // insert other's 1st node to after cursor
+    cursor = cursor->next->next;  // increment cursor
+    other.head_->next = other_first_node_next;  // remove first node from other
+    other_first_node_next->prev = other.head_;
+    other.length_ -= 1;
+    weave_recursive(other, cursor);
   }
   else if(cursor->next != head_ && other.length_ == 0){
     return;
   }
   else{
-    // TODO: copy one node from other to current
+    Node* other_first_node = other.head_->next;
+    Node* other_first_node_next = other_first_node->next;
+    insert_node(cursor, other_first_node);  // insert other's 1st node to after cursor
+    cursor = cursor->next->next;  // increment cursor
+    other.head_->next = other_first_node_next;  // remove first node from other
+    other_first_node_next->prev = other.head_;
+    other.length_ -= 1;
+    weave_recursive(other, cursor);
   }
+}
+
+void Chain::insert_node(Node* cursor, Node* inserted){
+  Node* cursor_next = cursor->next;
+  cursor->next = inserted;
+  inserted->prev = cursor;
+  inserted->next = cursor_next;
+  cursor_next->prev = inserted;
+  length_ += 1;
 }
 
 
@@ -195,6 +222,7 @@ void Chain::weave_recursive(Chain & other, Node* cursor){
  */
 void Chain::clear() {
   /* your code here */
+  // TODO: don't forget!!!
 }
 
 /**
@@ -206,4 +234,19 @@ void Chain::clear() {
  */
 void Chain::copy(Chain const& other) {
   /* your code here */
+  height_ = other.height_;
+  width_ = other.width_;
+  head_ = new Node();
+  Node* current_cursor = head_;
+  Node* other_cursor = other.head_->next;
+  while(other_cursor != other.head_){
+    Node* new_node = new Node(other_cursor->data);
+    current_cursor->next = new_node;
+    new_node->prev = current_cursor;
+    current_cursor = current_cursor->next;
+    other_cursor = other_cursor->next;
+  }
+  current_cursor->next = head_;
+  head_->prev = current_cursor;
+  length_ = other.length_;
 }

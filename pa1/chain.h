@@ -223,6 +223,20 @@ private:
     */
    void swap_node(int pos1, int pos2);
 
+   /* 
+    * requires: block sizes are same
+    * effects: does same thing as weave except not handling block
+    *          size different situation
+    */
+   void weave_recursive(Chain & other, Node* cursor);
+
+   /*
+    * effects: inserts Node "inserted" to the position
+    *          after "cursor" in this chain AND
+    *          increment length by 1
+    */
+   void insert_node(Node* cursor, Node* inserted);
+
    /* =================== private given functions ============== */
 
    /**
