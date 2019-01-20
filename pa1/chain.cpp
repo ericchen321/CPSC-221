@@ -9,6 +9,7 @@
  */
 Chain::~Chain(){
   /* your code here */
+  // TODO: need to do this!!!
 }
 
 /**
@@ -43,7 +44,6 @@ void Chain::insertBack(const Block & ndata){
  */
 void Chain::moveBack(int startPos, int len, int dist){
   /* your code here */
-  // FIXME:for now consider startPos <= length
   if (startPos + len - 1 + dist > length_){
     dist = length_ - startPos - len + 1;
   }
@@ -163,6 +163,28 @@ void Chain::swap_node(int pos1, int pos2){
 */
 void Chain::weave(Chain & other) { // leaves other empty.
   /* your code here */
+  Node* cursor = head_;
+  if (!(height_ == other.height_ && width_==other.width_)){
+    cout << "Block sizes differ." << endl;
+  }
+  else {
+    weave_recursive(other, cursor);
+  }
+}
+
+void Chain::weave_recursive(Chain & other, Node* cursor){
+  if(cursor->next == head_ && other.length_ == 0){
+    return;
+  }
+  else if(cursor->next == head_ && other.length_ != 0){
+    // TODO: may need recursively copying node from other to current
+  }
+  else if(cursor->next != head_ && other.length_ == 0){
+    return;
+  }
+  else{
+    // TODO: copy one node from other to current
+  }
 }
 
 
