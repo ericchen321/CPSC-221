@@ -1,5 +1,6 @@
 #include "chain.h"
 #include "chain_given.cpp"
+#include <assert.h>
 
 // PA1 functions
 
@@ -19,12 +20,17 @@ Chain::~Chain(){
 
 void Chain::delete_node(Node* cursor){
   if(cursor->next == head_){
+    if (length_ >= 1)
+      length_ -= 1;
     delete cursor;
   }
   else{
     delete_node(cursor->next);
+    if (length_ >= 1)
+      length_ -= 1;
     delete cursor;
   }
+  assert(length_ >= 0);
 }
 
 /**

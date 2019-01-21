@@ -238,8 +238,9 @@ private:
    void insert_node(Node* cursor, Node* inserted);
 
    /*
-    * effects: delete all nodes starting from cursor to the 
-    *          last one in this chain
+    * effects: delete all nodes from memory starting from cursor 
+    *          to the last one in this chain;
+    *          set new chain length
     */
    void delete_node(Node* cursor);
 
