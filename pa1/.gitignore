@@ -1,2 +1,7 @@
 # pa1 executable
 pa1
+
+# source files copied to my-tests/
+my_tests/chain.h
+my_tests/chain_given.cpp
+my_tests/chain.cpp
