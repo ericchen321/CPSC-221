@@ -73,6 +73,7 @@ else
 
    Chain e(png1,36);
    Chain g(e); // quick test of copy constructor
+   e = c; // sets e to c to make sure g is detached from e
    PNG result9 = g.render(36);
    result9.writeToFile("images/out-cpy-constructor-test.png");
 PNG expected9 = png1;
@@ -98,6 +99,12 @@ if (expected8 == result8)
    cout<< "weaveRenderBack passed" << endl;
 else
    cout<< "weaveRenderBack failed" << endl;
+
+   Chain h(png1, 12);
+   h.roll(7);
+   PNG result10 = h.render(12);
+   result10.writeToFile("images/out-roll.png");
+   cout << "check roll by eyeballing" << endl;
 
    return 0;
 }

@@ -11,6 +11,10 @@
 Chain::~Chain(){
   /* your code here */
   delete_node(head_);
+  head_ = NULL;
+  length_ = 0;
+  height_ = 0;
+  width_ = 0;
 }
 
 void Chain::delete_node(Node* cursor){
@@ -58,7 +62,7 @@ void Chain::moveBack(int startPos, int len, int dist){
   if (startPos + len - 1 + dist > length_){
     dist = length_ - startPos - len + 1;
   }
-  if (length_ == 0 || len == 0 || dist <= 0){
+  if (empty() || len == 0 || dist <= 0){
     return;
   }
   else{
@@ -93,9 +97,24 @@ void Chain::move_by_one(int startPos, int len){
  * nodes of the original list followed by the 1st, 2nd, ..., (n-k)th
  * nodes of the original list where n is the length.
  */
+// TODO: need tests
 void Chain::roll(int k){
   /* your code here */
-  // TODO: need to do this!!!
+  if(length_==0 || k<=0 || k>=length_){
+    return;
+  }
+  else{
+    Node* first_in_roll = walk(head_, (length_-k+1));
+    Node* last_in_roll = walk(head_, length_);
+    Node* first_to_follow = head_->next;
+    Node* last_to_follow = walk(head_, (length_ - k));
+    head_->next = first_in_roll;
+    head_->prev = last_to_follow;
+    first_in_roll->prev = head_;
+    last_in_roll->next = first_to_follow;
+    first_to_follow->prev = last_in_roll;
+    last_to_follow->next = head_;
+  }
 }
 
 /**
@@ -121,17 +140,8 @@ void Chain::reverseSub(int pos1, int pos2){
 }
 
 void Chain::swap_node(int pos1, int pos2){
-  int cnt;
-  Node* pos1_node = head_;
-  Node* pos2_node = head_;
-
-  for(cnt=0; cnt<pos1; cnt++){
-    pos1_node = pos1_node->next;
-  }
-
-  for(cnt=0; cnt<pos2; cnt++){
-    pos2_node = pos2_node->next;
-  }
+  Node* pos1_node = walk(head_, pos1);
+  Node* pos2_node = walk(head_, pos2);
 
   Node* pos1_node_prev = pos1_node->prev;
   Node* pos1_node_next = pos1_node->next;
@@ -188,10 +198,10 @@ void Chain::weave(Chain & other) { // leaves other empty.
 }
 
 void Chain::weave_recursive(Chain & other, Node* cursor){
-  if(cursor->next == head_ && other.length_ == 0){
+  if(cursor->next == head_ && other.empty()){
     return;
   }
-  else if(cursor->next == head_ && other.length_ != 0){
+  else if(cursor->next == head_ && !other.empty()){
     Node* other_first_node = other.head_->next;
     Node* other_first_node_next = other_first_node->next;
     insert_node(cursor, other_first_node);  // insert other's 1st node to after cursor
@@ -201,7 +211,7 @@ void Chain::weave_recursive(Chain & other, Node* cursor){
     other.length_ -= 1;
     weave_recursive(other, cursor);
   }
-  else if(cursor->next != head_ && other.length_ == 0){
+  else if(cursor->next != head_ && other.empty()){
     return;
   }
   else{
@@ -231,9 +241,18 @@ void Chain::insert_node(Node* cursor, Node* inserted){
  * current Chain class except for the sentinel head_. Sets length_
  * to zero.  After clear() the chain represents an empty chain.
  */
+// TODO: need tests
 void Chain::clear() {
   /* your code here */
-  // TODO: don't forget!!!
+  if (head_->next == head_){
+    return;
+  }
+  else{
+    delete_node(head_->next);
+    head_->next = head_;
+    head_->prev = head_;
+    length_ = 0;
+  }
 }
 
 /**
