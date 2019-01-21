@@ -7,9 +7,20 @@
  * Destroys the current Chain. This function should ensure that
  * memory does not leak on destruction of a chain.
  */
+// TODO: need tests
 Chain::~Chain(){
   /* your code here */
-  // TODO: need to do this!!!
+  delete_node(head_);
+}
+
+void Chain::delete_node(Node* cursor){
+  if(cursor->next == head_){
+    delete cursor;
+  }
+  else{
+    delete_node(cursor->next);
+    delete cursor;
+  }
 }
 
 /**

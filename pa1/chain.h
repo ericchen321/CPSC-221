@@ -237,6 +237,12 @@ private:
     */
    void insert_node(Node* cursor, Node* inserted);
 
+   /*
+    * effects: delete all nodes starting from cursor to the 
+    *          last one in this chain
+    */
+   void delete_node(Node* cursor);
+
    /* =================== private given functions ============== */
 
    /**
