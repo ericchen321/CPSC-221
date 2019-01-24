@@ -192,10 +192,10 @@ void Chain::weave(Chain & other) { // leaves other empty.
   /* your code here */
   Node* cursor = head_->next;
   if (!(height_ == other.height_ && width_==other.width_)){
-    cout << "current height: " << height_ << endl;
-    cout << "current width: " << width_ << endl;
-    cout << "other's height: " << other.height_ << endl;
-    cout << "other's width: " << other.width_ << endl;
+    //cout << "current height: " << height_ << endl;
+    //cout << "current width: " << width_ << endl;
+    //cout << "other's height: " << other.height_ << endl;
+    //cout << "other's width: " << other.width_ << endl;
     cout << "Block sizes differ." << endl;
   }
   else {
@@ -204,21 +204,18 @@ void Chain::weave(Chain & other) { // leaves other empty.
 }
 
 void Chain::weave_recursive(Chain & other, Node* cursor){
-  if(cursor->next == head_ && other.empty()){
+  if(other.empty()){
     return;
   }
   else if(cursor->next == head_ && !other.empty()){
     Node* other_first_node = other.head_->next;
     Node* other_first_node_next = other_first_node->next;
     insert_node(cursor, other_first_node);  // insert other's 1st node to after cursor
-    cursor = cursor->next->next;  // increment cursor
+    cursor = cursor->next;  // increment cursor
     other.head_->next = other_first_node_next;  // remove first node from other
     other_first_node_next->prev = other.head_;
     other.length_ -= 1;
     weave_recursive(other, cursor);
-  }
-  else if(cursor->next != head_ && other.empty()){
-    return;
   }
   else{
     Node* other_first_node = other.head_->next;
