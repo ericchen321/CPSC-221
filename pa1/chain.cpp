@@ -11,7 +11,8 @@
 // TODO: need tests
 Chain::~Chain(){
   /* your code here */
-  delete_node(head_);
+  clear();
+  delete head_;
   head_ = NULL;
   length_ = 0;
   height_ = 0;
@@ -269,7 +270,6 @@ void Chain::copy(Chain const& other) {
   /* your code here */
   height_ = other.height_;
   width_ = other.width_;
-  head_ = new Node();
   Node* current_cursor = head_;
   Node* other_cursor = other.head_->next;
   while(other_cursor != other.head_){
