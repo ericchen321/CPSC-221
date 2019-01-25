@@ -17,6 +17,32 @@ void insert(Node*& head, int newKey) {
 }
 
 /**
+ * Inserts a new Node (with key=newKey) at the tail of the linked_list.
+ * PRE: head is the first node in a linked_list (if NULL, linked_list is empty) 
+ * PRE: newKey is the value for the key in the new Node 
+ * POST: the new Node is now the tail of the linked_list. If given linked list is
+ *       empty, then the new node is also the head of the linked list.
+ */ 
+void insert_at_tail(Node*& head, int newKey){
+  if(head == NULL || head->next == NULL){
+    Node* new_node = new Node;
+    new_node->key = newKey;
+    new_node->next = NULL;
+    if(head == NULL){
+      head = new_node;
+    }
+    else
+    {
+      head->next = new_node;
+    }
+  }
+  else
+  {
+    insert_at_tail(head->next, newKey);
+  }
+}
+
+/**
  * Print the keys of a linked_list in order, from head to tail 
  * PRE: head is the first node in a linked_list (if NULL, linked_list is empty) 
  */ 
@@ -60,7 +86,17 @@ std::vector<int> to_vector(Node* head) {
  */
 void delete_last_element(Node*& head){
   // ******** WRITE YOUR CODE HERE ********
-
+  if(head == NULL){
+    return;
+  }
+  else if(head->next == NULL){
+    delete head;
+    head = NULL;
+    return;
+  }
+  else{
+    delete_last_element(head->next);
+  }
 }
 
 /**
@@ -74,7 +110,17 @@ void delete_last_element(Node*& head){
  */ 
 void remove(Node*& head, int oldKey) {
   // ******** WRITE YOUR CODE HERE ********
-
+  if (head == NULL){
+    return;
+  }
+  else if (head->key == oldKey){
+    Node* to_be_removed = head;
+    head = head->next;
+    delete to_be_removed;
+  }
+  else{
+    remove(head->next, oldKey);
+  }
 }
 
 /**
@@ -88,7 +134,15 @@ void remove(Node*& head, int oldKey) {
  */
 void insert_after(Node* head, int oldKey, int newKey){
   // ******** WRITE YOUR CODE HERE ********
-
+  if(head == NULL){
+    return;
+  }
+  else if(head->key == oldKey){
+    insert(head->next, newKey);
+  }
+  else{
+    insert_after(head->next, oldKey, newKey);
+  }
 }
 
 /** 
@@ -102,7 +156,27 @@ void insert_after(Node* head, int oldKey, int newKey){
  * For example: [1, 2] and [3, 4, 5] would return [1, 3, 2, 4, 5]
  */
 Node* interleave(Node* list1, Node* list2){
-  // ******** WRITE YOUR CODE HERE ********
-  return NULL;  // ******** DELETE THIS LINE ********
-
+  Node* new_list = NULL;
+  
+  if (list1 == NULL || list2 == NULL){ // base cases
+    Node* curr;
+    if(list1 == NULL){
+      curr = list2;
+    }
+    else{
+      curr = list1;
+    }
+    while (curr != NULL){
+      insert_at_tail(new_list, curr->key);
+      curr = curr->next;
+    }
+    return new_list;
+  }
+  else{ // recursive case
+    insert_at_tail(new_list, list1->key);
+    insert_at_tail(new_list, list2->key);
+    new_list->next->next = interleave(list1->next, list2->next);
+    return new_list;
+  }
+  
 }
