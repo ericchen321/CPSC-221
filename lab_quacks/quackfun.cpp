@@ -26,9 +26,16 @@ namespace QuackFun {
     T sum(stack<T>& s)
     {
         // Your code here
-        return T(); // stub return value (0 for primitive types). Change this!
-                    // Note: T() is the default value for objects, and 0 for
-                    // primitive types
+        if(s.empty()){
+            return T();
+        }
+        
+        T sum;
+        T topEle = s.top();
+        s.pop();
+        sum = topEle + QuackFun::sum(s);
+        s.push(topEle);
+        return sum;
     }
 
     /**
@@ -47,10 +54,48 @@ namespace QuackFun {
     void scramble(queue<T>& q)
     {
         stack<T> s;
-        // optional: queue<T> q2;
+        queue<T> q2;
 
         // Your code here
+        int block_num = 1;
+        int queue_ele_count;
+
+        while(!q.empty()){
+            // copy the ith block to s
+            if(block_num % 2 == 0){
+                for(queue_ele_count = 0; (queue_ele_count < block_num && !q.empty()); queue_ele_count++){
+                    T ele = q.front();
+                    q.pop();
+                    s.push(ele);
+                }
+                // push s to q2 and empty s
+                while(queue_ele_count > 0){
+                    T ele = s.top();
+                    q2.push(ele);
+                    s.pop();
+                    queue_ele_count -= 1;
+                }
+            }
+            else{
+                for(queue_ele_count = 0; (queue_ele_count < block_num && !q.empty()); queue_ele_count++){
+                    T ele = q.front();
+                    q.pop();
+                    q2.push(ele);
+                }
+            }
+            block_num += 1;
+        }
+
+        q = q2;
     }
+
+    /*
+    template <typename T>
+    void scrambleRecursive(queue<T>& q, int i){
+        int count = 0;
+
+    }
+    */
 
     /**
      * @return true if the parameter stack and queue contain only elements of

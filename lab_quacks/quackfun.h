@@ -23,6 +23,9 @@ namespace QuackFun
     template <typename T>
     void scramble(queue<T>& q);
 
+    //template <typename T>
+    //void scrambleRecursive(queue<T>& q, int i);
+
     template <typename T>
     bool verifySame(stack<T>& s, queue<T>& q);
 };
