@@ -97,12 +97,21 @@ void DLL_Deque::removeDuplicates() {
     while (repeat->next && repeat->next->data == current->data)
       repeat = repeat->next;
     if (repeat != current) {
-      current->next = repeat->next;
-      if (current->next)
-	current->next->prev = current;
+      Node* successor = repeat->next;    
+      
+      Node* cursor = current->next;
+      while(cursor != successor){
+        Node* cursorNext = cursor->next;
+        delete cursor;
+        cursor = cursorNext;
+      }
+      
+      current->next = successor;
+      if (successor)
+	      successor->prev = current;
       else
-	right = current;
-      delete repeat;
+	      right = current;
+      
     }
     current = current->next;
   }
