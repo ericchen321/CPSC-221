@@ -61,8 +61,8 @@ namespace QuackFun {
         int queue_ele_count;
 
         while(!q.empty()){
-            // copy the ith block to s
             if(block_num % 2 == 0){
+                // copy the ith block to s
                 for(queue_ele_count = 0; (queue_ele_count < block_num && !q.empty()); queue_ele_count++){
                     T ele = q.front();
                     q.pop();
@@ -77,6 +77,7 @@ namespace QuackFun {
                 }
             }
             else{
+                // push ith block to q2
                 for(queue_ele_count = 0; (queue_ele_count < block_num && !q.empty()); queue_ele_count++){
                     T ele = q.front();
                     q.pop();
