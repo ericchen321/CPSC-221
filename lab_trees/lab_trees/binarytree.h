@@ -186,6 +186,10 @@ class BinaryTree
     /* Private helper function for printPaths
      */
     void printPaths(Node* subroot, queue<Node*> prevNodes) const;
+
+    /* Private helper function for sumDistances
+     */
+    int sumDistances(Node* subroot, int distSoFar) const;
 };
 
 #include "binarytree_given.cpp"
