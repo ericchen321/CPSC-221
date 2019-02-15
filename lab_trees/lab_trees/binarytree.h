@@ -12,6 +12,7 @@
 #include <vector>
 #include <sstream>
 #include "random.h"
+#include <queue>
 
 using namespace std;
 
@@ -172,6 +173,19 @@ class BinaryTree
      * @param subRoot The current node in the recursion.
      */
     void clear(Node* subRoot);
+
+    /*
+     * Private helper function for printLeftToRight
+     */
+    void printLeftToRight(const Node* subRoot) const;
+
+    /* Private helper function for mirror
+     */
+    void mirror(Node* &subroot);
+
+    /* Private helper function for printPaths
+     */
+    void printPaths(Node* subroot, queue<Node*> prevNodes) const;
 };
 
 #include "binarytree_given.cpp"

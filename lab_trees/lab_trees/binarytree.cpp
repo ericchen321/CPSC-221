@@ -48,6 +48,7 @@ template <typename T>
 void BinaryTree<T>::printLeftToRight() const
 {
     // Your code here
+    printLeftToRight(root);
 
     // Do not remove this line - used for correct print output
     cout << endl;
@@ -61,7 +62,7 @@ template <typename T>
 void BinaryTree<T>::mirror()
 {
     // Your code here
-
+    mirror(root);
 }
 
 /**
@@ -74,7 +75,8 @@ template <typename T>
 void BinaryTree<T>::printPaths() const
 {
     // Your code here
-
+    queue<Node*> nodeQueue;
+    printPaths(root, nodeQueue);
 }
 
 /**
@@ -102,4 +104,58 @@ bool BinaryTree<T>::isOrdered() const
 {
     // Your code here
     return false;
+}
+
+/*
+ * Private helper function for printLeftToRight
+ */
+template <typename T>
+void BinaryTree<T>::printLeftToRight(const Node* subRoot) const
+{
+    if(subRoot != NULL){
+        printLeftToRight(subRoot->left);
+        cout << subRoot->elem << " ";
+        printLeftToRight(subRoot->right);
+    }
+}
+
+/* Private helper function for mirror
+ */
+template <typename T>
+void BinaryTree<T>::mirror(Node* &subroot){
+    if(subroot != NULL){
+        mirror(subroot->left);
+        mirror(subroot->right);
+        Node* temp = subroot->left;
+        subroot->left = subroot->right;
+        subroot->right = temp;
+    }
+}
+
+/* Private helper function for printPaths
+ */
+template <typename T>
+void BinaryTree<T>::printPaths(Node* subroot, queue<Node*> prevNodes) const{
+    // base case
+    if(subroot == NULL){
+        return;
+    }
+
+    if(subroot->left == NULL && subroot->right == NULL){
+        cout << "Path:";
+        Node* cursor;
+        prevNodes.push(subroot);
+        while(!prevNodes.empty()){
+            cursor = prevNodes.front();
+            cout << " " << cursor->elem;
+            prevNodes.pop();
+        }
+        cout << endl;
+        return;
+    }
+
+    // recursive case
+    prevNodes.push(subroot);
+    printPaths(subroot->left, prevNodes);
+    printPaths(subroot->right, prevNodes);
 }
