@@ -8,8 +8,9 @@
 template <class T>
 Deque<T>::Deque(){
 
-/* your code here */
-
+    /* your code here */
+    k1 = 0;
+    k2 = -1;
 }
 
 /**
@@ -23,6 +24,8 @@ void Deque<T>::pushR(T const& newItem)
     /**
      * @todo Your code here!
      */
+    k2 = k2 + 1;
+    data.push_back(newItem);
 }
 
 /**
@@ -39,7 +42,30 @@ T Deque<T>::popL()
     /**
      * @todo Your code here! 
      */
-    
+    T poped = peekL();
+    k1 += 1;
+    if(isEmpty()){
+        k1 = 0;
+        k2 = -1;
+        data.resize(0);
+        return poped;
+    }
+    else if(k2-k1+1 <= k1){
+        vector<T> temp;
+        for(int i=k1; i<=k2; i++){
+            temp.push_back(data[i]);
+        }
+        data.resize(temp.size());
+        for(int i=0; i<temp.size(); i++){
+            data[i] = temp[i];
+        }
+        k1 = 0;
+        k2 = temp.size()-1;
+        return poped;
+    }
+    else{
+        return poped;
+    }
 }
 /**
  * Removes the object at the right of the Deque, and returns it to the
@@ -53,7 +79,24 @@ T Deque<T>::popR()
     /**
      * @todo Your code here! 
      */
+    T poped = peekR();
+    data.pop_back();
+    k2 -= 1;
 
+    if(k2-k1+1 <= k1){
+        vector<T> temp;
+        for(int i=k1; i<=k2; i++){
+            temp.push_back(data[i]);
+        }
+        data.resize(temp.size());
+        for(int i=0; i<temp.size(); i++){
+            data[i] = temp[i];
+        }
+        k1 = 0;
+        k2 = temp.size()-1;
+    }
+
+    return poped;
 }
 
 /**
@@ -68,7 +111,7 @@ T Deque<T>::peekL()
     /**
      * @todo Your code here! 
      */
-
+    return data[k1];
 }
 
 /**
@@ -83,6 +126,7 @@ T Deque<T>::peekR()
     /**
      * @todo Your code here! 
      */
+    return data[k2];
 }
 
 /**
@@ -96,4 +140,5 @@ bool Deque<T>::isEmpty() const
     /**
      * @todo Your code here! 
      */
+    return (k2<k1);
 }
