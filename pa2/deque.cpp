@@ -56,7 +56,7 @@ T Deque<T>::popL()
             temp.push_back(data[i]);
         }
         data.resize(temp.size());
-        for(int i=0; i<temp.size(); i++){
+        for(unsigned long i=0; i<temp.size(); i++){
             data[i] = temp[i];
         }
         k1 = 0;
@@ -89,7 +89,7 @@ T Deque<T>::popR()
             temp.push_back(data[i]);
         }
         data.resize(temp.size());
-        for(int i=0; i<temp.size(); i++){
+        for(unsigned long i=0; i<temp.size(); i++){
             data[i] = temp[i];
         }
         k1 = 0;
