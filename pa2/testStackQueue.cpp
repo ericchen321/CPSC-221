@@ -80,7 +80,15 @@ TEST_CASE("deque::popL and peekL"){
     REQUIRE(d.isEmpty()==true);
 }
 
-/*
+TEST_CASE("stack::isEmpty"){
+    Stack<int> s;
+    REQUIRE(s.isEmpty()==true);
+    s.push(10);
+    REQUIRE(s.isEmpty()==false);
+    s.pop();
+    REQUIRE(s.isEmpty()==true);
+}
+
 TEST_CASE("stack::basic functions","[weight=1][part=stack]"){
     cout << "Testing Stack..." << endl;
     Stack<int> intStack;
@@ -97,6 +105,20 @@ TEST_CASE("stack::basic functions","[weight=1][part=stack]"){
     }
     REQUIRE( result == expected);
 }
+
+TEST_CASE("queue::isEmpty"){
+    Queue<int> q;
+    REQUIRE(q.isEmpty()==true);
+    q.enqueue(10);
+    REQUIRE(q.isEmpty()==false);
+    q.enqueue(20);
+    REQUIRE(q.isEmpty()==false);
+    q.dequeue();
+    REQUIRE(q.isEmpty()==false);
+    q.dequeue();
+    REQUIRE(q.isEmpty()==true);
+}
+
 TEST_CASE("queue::basic functions","[weight=1][part=queue]"){
     Queue<int> intQueue;
     vector<int> result;
@@ -112,4 +134,3 @@ TEST_CASE("queue::basic functions","[weight=1][part=queue]"){
     }
     REQUIRE( result == expected);
 }
-*/
