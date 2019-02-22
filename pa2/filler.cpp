@@ -79,10 +79,10 @@ animation filler::fill(PNG& img, int x, int y, colorPicker& fillColor,
      *        1.    add its unprocessed neighbors whose color values are 
      *              within (or equal to) tolerance distance from the center, 
      *              to the ordering structure.
-     *        2.    use the colorPicker to set the new color of the point.
-     *        3.    mark the point as processed.
-     *        4.    if it is an appropriate frame, send the current PNG to the
-     *              animation (as described below).
+     *        2.    use the colorPicker to set the new color of the neighbrs.
+     *        3.    mark the neighbors as processed.
+     *        4.    as you process a neighbor, if it is an appropriate frame, 
+     *              send the current PNG to the animation (as described below).
      *
      * 2.     When implementing your breadth-first-search and
      *        depth-first-search fills, you will need to explore neighboring
