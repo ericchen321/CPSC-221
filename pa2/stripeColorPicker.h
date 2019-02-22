@@ -25,7 +25,7 @@ class stripeColorPicker : public colorPicker
     stripeColorPicker(HSLAPixel fillColor, int stripeSpacing);
 
     /**
-     * Picks the color for pixel (x, y). If the x or y coordinate is a
+     * Picks the color for pixel (x, y). If the x coordinate is a
      * multiple of the spacing, it will be filled with the fillColor.
      * otherwise, it will be filled with white.
      *

@@ -55,6 +55,22 @@ class borderColorPicker : public colorPicker
     PNG im;
     double tol;
     HSLAPixel ctr;
+
+    /*
+     * effects: returns true if given coordinate (x,y)
+     *          is within the boundary of the image with
+     *          given width and height; false otherwise.
+     */
+    bool isWithinImage(int x, int y, unsigned int imgWidth, unsigned int imgHeight);
+
+    /*
+     * requires: given (x,y) is within boudary of image im
+     * effects: returns true if pixel at given (x,y) of
+     *          image im is within the fill region, as
+     *          defined by the center pixel and tolerance;
+     *          returns false otherwise.
+     */
+    bool isWithinFillRegion(int x, int y);
 };
 
 #endif
