@@ -152,47 +152,48 @@ animation filler::fill(PNG& img, int x, int y, colorPicker& fillColor,
 
     if(fillPixel(x, y, x, y, tolerance, imgMatrix, os, img, fillColor)){
         fillCount += 1;
+        processFrame(anime, img, fillCount, frameFreq);
     }
     
     while(!os.isEmpty()){
         PixelRecord ctr = os.remove();
 
-        if(fillPixel(ctr.x+1, ctr.y-1, ctr.x, ctr.y, tolerance, imgMatrix, os, img, fillColor)){
+        if(fillPixel(ctr.x+1, ctr.y-1, x, y, tolerance, imgMatrix, os, img, fillColor)){
             fillCount += 1;
             processFrame(anime, img, fillCount, frameFreq);
         }
 
-        if(fillPixel(ctr.x, ctr.y-1, ctr.x, ctr.y, tolerance, imgMatrix, os, img, fillColor)){
+        if(fillPixel(ctr.x, ctr.y-1, x, y, tolerance, imgMatrix, os, img, fillColor)){
             fillCount += 1;
             processFrame(anime, img, fillCount, frameFreq);
         }
 
-        if(fillPixel(ctr.x-1, ctr.y-1, ctr.x, ctr.y, tolerance, imgMatrix, os, img, fillColor)){
+        if(fillPixel(ctr.x-1, ctr.y-1, x, y, tolerance, imgMatrix, os, img, fillColor)){
             fillCount += 1;
             processFrame(anime, img, fillCount, frameFreq);
         }
 
-        if(fillPixel(ctr.x-1, ctr.y, ctr.x, ctr.y, tolerance, imgMatrix, os, img, fillColor)){
+        if(fillPixel(ctr.x-1, ctr.y, x, y, tolerance, imgMatrix, os, img, fillColor)){
             fillCount += 1;
             processFrame(anime, img, fillCount, frameFreq);
         }
 
-        if(fillPixel(ctr.x-1, ctr.y+1, ctr.x, ctr.y, tolerance, imgMatrix, os, img, fillColor)){
+        if(fillPixel(ctr.x-1, ctr.y+1, x, y, tolerance, imgMatrix, os, img, fillColor)){
             fillCount += 1;
             processFrame(anime, img, fillCount, frameFreq);
         }
 
-        if(fillPixel(ctr.x, ctr.y+1, ctr.x, ctr.y, tolerance, imgMatrix, os, img, fillColor)){
+        if(fillPixel(ctr.x, ctr.y+1, x, y, tolerance, imgMatrix, os, img, fillColor)){
             fillCount += 1;
             processFrame(anime, img, fillCount, frameFreq);
         }
 
-        if(fillPixel(ctr.x+1, ctr.y+1, ctr.x, ctr.y, tolerance, imgMatrix, os, img, fillColor)){
+        if(fillPixel(ctr.x+1, ctr.y+1, x, y, tolerance, imgMatrix, os, img, fillColor)){
             fillCount += 1;
             processFrame(anime, img, fillCount, frameFreq);
         }
 
-        if(fillPixel(ctr.x+1, ctr.y, ctr.x, ctr.y, tolerance, imgMatrix, os, img, fillColor)){
+        if(fillPixel(ctr.x+1, ctr.y, x, y, tolerance, imgMatrix, os, img, fillColor)){
             fillCount += 1;
             processFrame(anime, img, fillCount, frameFreq);
         }
