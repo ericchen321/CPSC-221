@@ -11,6 +11,8 @@ animation filler::fillStripeDFS(PNG& img, int x, int y, HSLAPixel fillColor,
     /**
      * @todo Your code here! 
      */
+    stripeColorPicker s(fillColor, stripeSpacing);
+    return fill<Stack>(img, x, y, s, tolerance, frameFreq);
 }
 
 animation filler::fillBorderDFS(PNG& img, int x, int y,
@@ -19,6 +21,8 @@ animation filler::fillBorderDFS(PNG& img, int x, int y,
     /**
      * @todo Your code here! 
      */
+    borderColorPicker b(borderColor, img, tolerance, *(img.getPixel(x, y)));
+    return fill<Stack>(img, x, y, b, tolerance, frameFreq);
 }
 
 /* Given implementation of a DFS rainbow fill. */
@@ -35,6 +39,8 @@ animation filler::fillStripeBFS(PNG& img, int x, int y, HSLAPixel fillColor,
     /**
      * @todo Your code here! 
      */
+    stripeColorPicker s(fillColor, stripeSpacing);
+    return fill<Queue>(img, x, y, s, tolerance, frameFreq);
 }
 
 animation filler::fillBorderBFS(PNG& img, int x, int y,
@@ -43,6 +49,8 @@ animation filler::fillBorderBFS(PNG& img, int x, int y,
     /**
      * @todo Your code here! You should replace the following line with a
      */
+    borderColorPicker b(borderColor, img, tolerance, *(img.getPixel(x, y)));
+    return fill<Queue>(img, x, y, b, tolerance, frameFreq);
 }
 
 /* Given implementation of a BFS rainbow fill. */
@@ -125,5 +133,121 @@ animation filler::fill(PNG& img, int x, int y, colorPicker& fillColor,
      *        animation. This frame will be the final result of the fill, and 
      *        it will be the one we test against.
      */
+    animation anime;
+    OrderingStructure<PixelRecord> os;
+    int fillCount = 0;
+    vector<vector<PixelRecord>> imgMatrix;
+    imgMatrix.resize(img.height());
+    for(unsigned int i=0; i<img.height(); i++){
+        imgMatrix[i].resize(img.width());
+        for(unsigned int j=0; j<img.width(); j++){
+            PixelRecord p;
+            p.x = j;
+            p.y = i;
+            p.beforeProcessing = *(img.getPixel((unsigned int)j, (unsigned int)i));
+            p.processed = false;
+            imgMatrix[i][j] = p;
+        }
+    }
 
-} 
+    if(fillPixel(x, y, x, y, tolerance, imgMatrix, os, img, fillColor)){
+        fillCount += 1;
+    }
+    
+    while(!os.isEmpty()){
+        PixelRecord ctr = os.remove();
+
+        if(fillPixel(ctr.x+1, ctr.y-1, ctr.x, ctr.y, tolerance, imgMatrix, os, img, fillColor)){
+            fillCount += 1;
+            processFrame(anime, img, fillCount, frameFreq);
+        }
+
+        if(fillPixel(ctr.x, ctr.y-1, ctr.x, ctr.y, tolerance, imgMatrix, os, img, fillColor)){
+            fillCount += 1;
+            processFrame(anime, img, fillCount, frameFreq);
+        }
+
+        if(fillPixel(ctr.x-1, ctr.y-1, ctr.x, ctr.y, tolerance, imgMatrix, os, img, fillColor)){
+            fillCount += 1;
+            processFrame(anime, img, fillCount, frameFreq);
+        }
+
+        if(fillPixel(ctr.x-1, ctr.y, ctr.x, ctr.y, tolerance, imgMatrix, os, img, fillColor)){
+            fillCount += 1;
+            processFrame(anime, img, fillCount, frameFreq);
+        }
+
+        if(fillPixel(ctr.x-1, ctr.y+1, ctr.x, ctr.y, tolerance, imgMatrix, os, img, fillColor)){
+            fillCount += 1;
+            processFrame(anime, img, fillCount, frameFreq);
+        }
+
+        if(fillPixel(ctr.x, ctr.y+1, ctr.x, ctr.y, tolerance, imgMatrix, os, img, fillColor)){
+            fillCount += 1;
+            processFrame(anime, img, fillCount, frameFreq);
+        }
+
+        if(fillPixel(ctr.x+1, ctr.y+1, ctr.x, ctr.y, tolerance, imgMatrix, os, img, fillColor)){
+            fillCount += 1;
+            processFrame(anime, img, fillCount, frameFreq);
+        }
+
+        if(fillPixel(ctr.x+1, ctr.y, ctr.x, ctr.y, tolerance, imgMatrix, os, img, fillColor)){
+            fillCount += 1;
+            processFrame(anime, img, fillCount, frameFreq);
+        }
+    }
+
+    if(fillCount != 0)
+        anime.addFrame(img);
+    
+    return anime;
+}
+
+bool filler::fillPixel(int x, int y, 
+                       int ctr_x, int ctr_y, double tol, 
+                       vector<vector<PixelRecord>>& imgMatrix,
+                       OrderingStructure<PixelRecord>& os, 
+                       PNG& img, 
+                       colorPicker& fillColor){
+    //cout << "processing pixel " << x << " " << y << endl;
+    if(isWithinImage(x, y, img)){
+        PixelRecord& given = imgMatrix[y][x];
+        if(given.processed == false
+            && isWithinFillRegion(x, y, ctr_x, ctr_y, imgMatrix, tol))
+        {
+            *(img.getPixel(x, y)) = fillColor(x, y);
+            given.processed = true;
+            os.add(given);
+            //cout << "processed pixel " << x << " " << y << endl;
+            return true;
+        }
+        else{
+            return false;
+        }
+    }
+    return false;
+}
+
+bool filler::isWithinImage(int x, int y, PNG& img){
+    int w = (int) img.width();
+    int h = (int) img.height();
+    return (w>0 && h>0 && x>=0 && x<w && y>=0 && y<h);
+}
+
+bool filler::isWithinFillRegion(int x, int y, int ctr_x, int ctr_y, 
+                                vector<vector<PixelRecord>>& imgMatrix, 
+                                double tol){
+    HSLAPixel pixel = imgMatrix[y][x].beforeProcessing;
+    HSLAPixel center = imgMatrix[ctr_y][ctr_x].beforeProcessing;
+    double dist = pixel.dist(center);
+    //cout << "dist: " << dist <<endl;
+    return (dist>=(-1*tol) && dist<=tol);
+}
+
+void filler::processFrame(animation& anime, PNG& img, int& fillCount, int frameFreq){
+    if(fillCount == frameFreq){
+        anime.addFrame(img);
+        fillCount = 0;
+    }
+}

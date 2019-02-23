@@ -55,10 +55,12 @@ PNG testColorPicker(colorPicker& picker)
         for (int y = 1; y < FUNCTORTESTHEIGHT; y = y + y) {
             px = picker(x, y);
             // these create the output useful for debugging fills
+            /*
             cout << "\toperator()(" << x << ", " << y << ") = {"
                 << (int)px.h << ", "
                 << (int)px.s << ", "
                 << (int)px.l << "}" << endl;
+            */
         }
     }
 
@@ -137,6 +139,7 @@ TEST_CASE("fill::basic border bfs","[weight=1][part=fill]"){
     PNG expected; expected.readFromFile("soln_images/bfsborder.png");
     REQUIRE(result==expected);
 }
+*/
 
 TEST_CASE("fill::basic stripe dfs","[weight=1][part=fill]"){
     PNG img;
@@ -151,7 +154,7 @@ TEST_CASE("fill::basic stripe dfs","[weight=1][part=fill]"){
     PNG expected; expected.readFromFile("soln_images/dfsstripe.png");
     REQUIRE(result==expected);
 }
-
+/*
 TEST_CASE("fill::basic stripe bfs","[weight=1][part=fill]"){
     PNG img;
     img.readFromFile(GRIDTESTIMAGE);

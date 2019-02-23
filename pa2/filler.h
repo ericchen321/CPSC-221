@@ -133,6 +133,53 @@ namespace filler
     template <template <class T> class OrderingStructure>
     animation fill(PNG& img, int x, int y, colorPicker& fillColor,
                    double tolerance, int frameFreq);
+
+    struct PixelRecord{
+        int x;
+        int y;
+        HSLAPixel beforeProcessing;
+        bool processed;
+    };
+
+    /* effects: If pixel of given (x, y) is unprocessed, and is within 
+     *          boundary of given image, and is within fill region, 
+     *          then adds its PixelRecord to given ordering structure, 
+     *          marks it as processed, and fills it with given color picker. 
+     *          Returns true if pixel of given (x, y) is actually filled.
+     *          If given pixel fails any condition above then return false.
+     */
+    bool fillPixel(int x, int y, 
+                   int ctr_x, int ctr_y, double tol, 
+                   vector<vector<PixelRecord>>& imgMatrix,
+                   OrderingStructure<PixelRecord>& os, 
+                   PNG& img, 
+                   colorPicker& fillColor);
+
+    /*
+     * effects: returns true if given pixel is within the boundary 
+     *          of the given image;
+     *          false otherwise.
+     */
+    bool isWithinImage(int x, int y, PNG& img);
+
+    /*
+     * requires: given pixel is within boudary of given image
+     * effects: returns true if given pixel is within fill region, 
+     *          as indicated by the center point and tolerence;
+     *          returns false otherwise.
+     */
+    bool isWithinFillRegion(int x, int y, int ctr_x, int ctr_y, 
+                            vector<vector<PixelRecord>>& imgMatrix, double tol);
+
+    /* 
+     * Adds a new frame to given animation if fillCount overflows.
+     * Resets fillCount to 0 after an overflow.
+     * @param: anime animation in which a new frame may be added
+     * @param: img image after last fill
+     * @param: fillCount number of pixels actually filled since last frame
+     * @param: frameFreq frame frequency, requires this > 0
+     */
+    void processFrame(animation& anime, PNG& img, int& fillCount, int frameFreq);
 }
 #include "filler.cpp"
 #endif
