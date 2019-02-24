@@ -243,7 +243,7 @@ bool filler::isWithinFillRegion(int x, int y, int ctr_x, int ctr_y,
     HSLAPixel center = imgMatrix[ctr_y][ctr_x].beforeProcessing;
     double dist = pixel.dist(center);
     //cout << "dist: " << dist <<endl;
-    return (dist>=(-1*tol) && dist<=tol);
+    return dist<=tol;
 }
 
 void filler::processFrame(animation& anime, PNG& img, int& fillCount, int frameFreq){

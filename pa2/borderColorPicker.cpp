@@ -13,15 +13,13 @@ HSLAPixel borderColorPicker::operator()(int x, int y)
 {
 
 /* Your code here! */
-  int distSqr;
+  double distSqr;
   for(int i=-3; i<=3; i++){
     for(int j=-3; j<=3; j++){
       distSqr = i^2+j^2;
       if(distSqr <= 9 
-          && isWithinImage(x+i, y+j, im.width(), im.height()) 
-          && isWithinFillRegion(x+i, y+j)){}
-      else{
-        return color;
+          && (!isWithinImage(x+i, y+j, im.width(), im.height()) || !isWithinFillRegion(x+i, y+j))){
+          return color;
       }
     }
   }
@@ -37,5 +35,5 @@ bool borderColorPicker::isWithinImage(int x, int y, unsigned int imgWidth, unsig
 bool borderColorPicker::isWithinFillRegion(int x, int y){
   HSLAPixel *p = im.getPixel((unsigned int)x, (unsigned int)y);
   double dist = p->dist(ctr);
-  return (dist>=(-1*tol) && dist<=tol);
+  return dist<=tol;
 }
