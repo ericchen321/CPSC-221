@@ -16,7 +16,7 @@ HSLAPixel borderColorPicker::operator()(int x, int y)
   double distSqr;
   for(int i=-3; i<=3; i++){
     for(int j=-3; j<=3; j++){
-      distSqr = i^2+j^2;
+      distSqr = i*i+j*j;
       if(distSqr <= 9 
           && (!isWithinImage(x+i, y+j, im.width(), im.height()) || !isWithinFillRegion(x+i, y+j))){
           return color;
