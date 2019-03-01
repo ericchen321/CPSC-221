@@ -207,8 +207,8 @@ TEST_CASE("fill::custom dfs"){
 
     animation anim;
     anim = filler::fillCustomDFS(img, GRIDX, GRIDY, color0, color1, SOLIDTOLERANCE, SOLIDFRAMEFREQ);
-    PNG result = anim.write("images/dfscustom.gif");
-    result.writeToFile("images/dfscustom.png");
+    PNG result = anim.write("images/customDFS.gif");
+    result.writeToFile("images/customDFS.png");
 }
 
 TEST_CASE("fill::custom bfs"){
@@ -219,6 +219,6 @@ TEST_CASE("fill::custom bfs"){
 
     animation anim;
     anim = filler::fillCustomBFS(img, GRIDX, GRIDY, color0, color1, SOLIDTOLERANCE, SOLIDFRAMEFREQ);
-    PNG result = anim.write("images/dfscustom.gif");
-    result.writeToFile("images/dfscustom.png");
+    PNG result = anim.write("images/customBFS.gif");
+    result.writeToFile("images/customBFS.png");
 }
