@@ -199,3 +199,26 @@ TEST_CASE("fill::basic rainbow bfs","[weight=1][part=fill]"){
 
 }
 
+TEST_CASE("fill::custom dfs"){
+    PNG img;
+    img.readFromFile(GRIDTESTIMAGE);
+    HSLAPixel color0(40., 1.0, 0.5);
+    HSLAPixel color1(200., 1.0, 0.5);
+
+    animation anim;
+    anim = filler::fillCustomDFS(img, GRIDX, GRIDY, color0, color1, SOLIDTOLERANCE, SOLIDFRAMEFREQ);
+    PNG result = anim.write("images/dfscustom.gif");
+    result.writeToFile("images/dfscustom.png");
+}
+
+TEST_CASE("fill::custom bfs"){
+    PNG img;
+    img.readFromFile(GRIDTESTIMAGE);
+    HSLAPixel color0(40., 1.0, 0.5);
+    HSLAPixel color1(200., 1.0, 0.5);
+
+    animation anim;
+    anim = filler::fillCustomBFS(img, GRIDX, GRIDY, color0, color1, SOLIDTOLERANCE, SOLIDFRAMEFREQ);
+    PNG result = anim.write("images/dfscustom.gif");
+    result.writeToFile("images/dfscustom.png");
+}

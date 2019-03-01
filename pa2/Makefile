@@ -1,7 +1,7 @@
 TESTSQ = testStackQueue
 TESTFILLS = testFills
 
-OBJS_FILLS_STUDENT = testFills.o borderColorPicker.o stripeColorPicker.o 
+OBJS_FILLS_STUDENT = testFills.o borderColorPicker.o stripeColorPicker.o  customColorPicker.o
 OBJS_FILLS_PROVIDED = animation.o PNG.o HSLAPixel.o lodepng.o rainbowColorPicker.o 
 OBJS_SQ = testStackQueue.o
 
@@ -21,7 +21,7 @@ $(TESTFILLS) : $(OBJS_FILLS_STUDENT) $(OBJS_FILLS_PROVIDED)
 testStackQueue.o : testStackQueue.cpp cs221util/PNG.h cs221util/HSLAPixel.h stack.h queue.h deque.h
 	$(CXX) $(CXXFLAGS) testStackQueue.cpp
 
-testFills.o : testFills.cpp cs221util/PNG.h cs221util/HSLAPixel.h stack.h queue.h deque.h filler.h filler.cpp rainbowColorPicker.h stripeColorPicker.h borderColorPicker.h
+testFills.o : testFills.cpp cs221util/PNG.h cs221util/HSLAPixel.h stack.h queue.h deque.h filler.h filler.cpp rainbowColorPicker.h stripeColorPicker.h borderColorPicker.h customColorPicker.h
 	$(CXX) $(CXXFLAGS) testFills.cpp
 
 # Pattern rules for object files
