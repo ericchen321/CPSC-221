@@ -8,6 +8,7 @@
  */
 
 #include "schashtable.h"
+#include <assert.h>
 
 using hashes::hash;
 using std::list;
@@ -75,7 +76,14 @@ void SCHashTable<K, V>::remove(K const& key)
      * Please read the note in the lab spec about list iterators and the
      * erase() function on std::list!
      */
-
+    size_t idx = hash(key, size);
+    for(it = table[idx].begin(); it != table[idx].end(); it++){
+        if (it->first == key){
+            table[idx].erase(it);
+            elems -= 1;
+            break;
+        }
+    }
 
     (void) key; // prevent warnings... When you implement this function, remove this line.
 }
@@ -145,7 +153,25 @@ void SCHashTable<K, V>::resizeTable()
      *
      * @hint Use findPrime()!
      */
+    // create new table
+    size_t new_size = findPrime(size * 2);
+    size_t new_elems = 0;
+    std::list<std::pair<K, V>>* new_table = new list<pair<K, V>>[new_size];
 
-
-
+    // loops through old table and copy elements over to new tbale
+    for (size_t i = 0; i < size; i++){
+        for(it = table[i].begin(); it != table[i].end(); it++){
+            pair<K, V> p(it->first, it->second);
+            size_t new_i = hash(it->first, it->second);
+            new_table[new_i].push_front(p);
+            new_elems ++;
+        }
+    }
+    assert(new_elems==elems);
+    
+    // delete old table and replace table metadata with new values
+    delete[] table;
+    table = new_table;
+    size = new_size;
+    elems = new_elems;
 }
