@@ -34,7 +34,7 @@ public:
 	// (x,y) is the cumulative sum of the the color values from (0,0)
 	// to (x,y), and the hist structure is as defined above.
     // Note that the hue (h) value of each pixel is represented by
-    // its cartesian coordinates: X = s*cos(h) and Y = s*sin(h). 
+    // its cartesian coordinates: X = cos(h) and Y = sin(h). 
     // This is done to simplify distance computation. We calculate
     // the cumulative sums for X and Y separately, and then combine
     // them when we are doing color difference computation.
