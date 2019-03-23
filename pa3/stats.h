@@ -11,6 +11,8 @@ using namespace std;
 using namespace cs221util;
 
 #define PI 3.14159265
+#define toRad(deg) (deg * PI / 180.0)
+#define toDeg(rad) (rad * 180.0 / PI)
 
 class stats {
 
