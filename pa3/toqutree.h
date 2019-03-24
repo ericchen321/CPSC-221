@@ -183,9 +183,8 @@ private:
    /**
    * Private helper function for the constructor. Recursively builds
    * the tree according to the specification of the constructor.
-   * @param s Contains the data used to split the rectangles
-   * @param ul upper left point of current node's rectangle.
-   * @param lr lower right point of current node's rectangle.
+   * @param: PNG * im, a pointer to a 2^k by 2^k image.
+   * @param: int k, the dimension of the image (note that this is redundant--could just be grabbed from the image itself)
    */
    Node * buildTree(PNG * im, int k);
 
