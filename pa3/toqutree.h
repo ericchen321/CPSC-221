@@ -11,9 +11,12 @@
 
 #include <utility>
 #include <cmath>
+#include <float.h>
 #include "cs221util/PNG.h"
 #include "cs221util/HSLAPixel.h"
 #include "stats.h"
+
+#define POW2(k) (unsigned int)pow(2, k)
 
 using namespace std;
 using namespace cs221util;
@@ -187,6 +190,28 @@ private:
    * @param: int k, the dimension of the image (note that this is redundant--could just be grabbed from the image itself)
    */
    Node * buildTree(PNG * im, int k);
+
+   /**
+    * Returns the average entropy of the four squares after splitting the
+    * parent square about (ctr_x, ctr_y). 
+    * @param s stats of the parent square.
+    * @param k dimension of the parent square. Requires k>=2.
+    * @param ctr_x ctr_y: split point. Requires (ctr_x, ctr_y) within (0,0)
+    *        to (2^k-1, 2^k-1).
+    */
+   double averageEntropy(stats &s, int k, int ctr_x, int ctr_y);
+
+   /**
+    * Build images of the four squares after splitting the parent square,
+    * represented by im.
+    * @param: im ptr to parent square's image.
+    * @param ctr_x ctr_y split point. Requires being a well-defined pt in
+    *        im.
+    * @param imgNW, imgNE, imgSE, imgSW ptr to images of four child squares.
+    *        The function should initialize and modify the images they 
+    *        point to.
+    */
+   void buildImages(PNG* im, int ctr_x, int ctr_y, PNG *imgNW, PNG *imgNE, PNG *imgSE, PNG *imgSW);
 
    /* =================== end of private PA3 functions ============== */
 };
