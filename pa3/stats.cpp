@@ -50,9 +50,11 @@ stats::stats(PNG & im){
                 if(i>0 && j>0){
                     hist[i][j][k] -= hist[i-1][j-1][k];
                 }
-                if(k*10 <= im.getPixel(j, i)->h < (k+1)*10){
+                
+                if(k*10 <= (int)im.getPixel(j, i)->h 
+                    && (int)im.getPixel(j, i)->h < (k+1)*10){
                     hist[i][j][k] += 1;
-                }
+                }  
             }
         }
     }
@@ -169,5 +171,5 @@ double stats::entropy(pair<int,int> ul, pair<int,int> lr){
 
     vector<int> hist = buildHist(ul, lr);
     long area = rectArea(ul, lr);
-    return entropy(hist, ((int)area));
+    return entropy(hist, (int)area);
 }
