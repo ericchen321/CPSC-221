@@ -7,6 +7,7 @@
 #include <utility>
 #include <cmath>
 #include <vector>
+#include <assert.h>
 using namespace std;
 using namespace cs221util;
 

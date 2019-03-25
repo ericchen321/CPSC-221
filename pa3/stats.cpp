@@ -62,6 +62,10 @@ long stats::rectArea(pair<int,int> ul, pair<int,int> lr){
 
 /* your code here */
     // TODO: now assuming not having to deal with shifting
+    assert(ul.first>=0 && ul.second>=0
+            && lr.first < (int)hist[0].size() && lr.second < (int)hist.size()
+            && lr.first >= ul.first && lr.second >= ul.second);
+
     int width = lr.first - ul.first + 1;
     int height = lr.second - ul.second + 1;
     return (long)(width * height);
@@ -71,6 +75,10 @@ HSLAPixel stats::getAvg(pair<int,int> ul, pair<int,int> lr){
 
 /* your code here */
     // TODO: now assuming not having to deal with shifting
+    assert(ul.first>=0 && ul.second>=0
+            && lr.first < (int)hist[0].size() && lr.second < (int)hist.size()
+            && lr.first >= ul.first && lr.second >= ul.second);
+
     double area = (double)rectArea(ul, lr);
     double sumHX, sumHY, sumS, sumL;
     
@@ -109,6 +117,10 @@ vector<int> stats::buildHist(pair<int,int> ul, pair<int,int> lr){
 
 /* your code here */
     // TODO: now assuming not having to deal with shifting
+    assert(ul.first>=0 && ul.second>=0
+            && lr.first < (int)hist[0].size() && lr.second < (int)hist.size()
+            && lr.first >= ul.first && lr.second >= ul.second);
+
     vector<int> hist_of_rec;
     hist_of_rec.resize(36);
 
@@ -150,6 +162,11 @@ double stats::entropy(vector<int> & distn,int area){
 double stats::entropy(pair<int,int> ul, pair<int,int> lr){
 
 /* your code here */
+    // TODO: now assuming not having to deal with shifting
+    assert(ul.first>=0 && ul.second>=0
+            && lr.first < (int)hist[0].size() && lr.second < (int)hist.size()
+            && lr.first >= ul.first && lr.second >= ul.second);
+
     vector<int> hist = buildHist(ul, lr);
     long area = rectArea(ul, lr);
     return entropy(hist, ((int)area));
