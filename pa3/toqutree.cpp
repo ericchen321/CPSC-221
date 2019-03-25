@@ -38,13 +38,14 @@ toqutree::toqutree(PNG & imIn, int k){
 /* that imIn is large enough to contain an image of that size. */
 
 /* your code here */
-	unsigned int x_offset = (imIn.width() - POW2(k)) / 2;
-	unsigned int y_offset = (imIn.height() - POW2(k)) / 2;
+	int x_offset = (imIn.width() - POW2(k)) / 2;
+	int y_offset = (imIn.height() - POW2(k)) / 2;
 	PNG* im = new PNG((POW2(k)), (POW2(k)));
 
-	for(unsigned int y=0; y<POW2(k); y++){
-		for(unsigned int x=0; x<POW2(k); x++){
-			*(im->getPixel(x, y)) = *(imIn.getPixel(x_offset+x, y_offset+y));
+	for(int y=0; y<POW2(k); y++){
+		for(int x=0; x<POW2(k); x++){
+			*(im->getPixel((unsigned int)x, (unsigned int)y)) = 
+			*(imIn.getPixel((unsigned int)(x_offset+x), (unsigned int)(y_offset+y)));
 		}
 	}
 
@@ -56,12 +57,102 @@ int toqutree::size() {
 	return 0;
 }
 
+double toqutree::totalEntropy(stats &s, int k, int ul_x, int ul_y){
+	assert(k>=2);
+
+	int lr_x = ul_x + POW2(k-1) - 1;
+	int lr_y = lr_y + POW2(k-1) - 1;
+	double area, entropy;
+
+	// both bounded
+	if(ul_x >= 0 && lr_x < POW2(k)
+			&& ul_y >= 0 && lr_y < POW2(k)){
+		vector<int> hist_all = s.buildHist({ul_x, ul_y}, {lr_x, lr_y});
+		area = s.rectArea({ul_x, ul_y}, {lr_x, lr_y});
+		return s.entropy(hist_all, area);
+	}
+
+	// y bounded
+	else if(ul_y >= 0	&& lr_y < POW2(k)){
+		vector<int> hist_left, hist_right, hist_all;
+		hist_all.resize(36);
+		double area_left, area_right;
+		if(ul_x<0){
+			hist_left = s.buildHist({0, ul_y}, {lr_x, lr_y});
+			area_left = s.rectArea({0, ul_y}, {lr_x, lr_y});
+			hist_right = s.buildHist({MOD(ul_x, POW2(k)), ul_y}, {POW2(k)-1, lr_y});
+			area_right = s.rectArea({MOD(ul_x, POW2(k)), ul_y}, {POW2(k)-1, lr_y});
+		}
+		else{
+			hist_left = s.buildHist({0, ul_x}, {MOD(lr_x, POW2(k)), lr_y});
+			area_left = s.rectArea({0, ul_x}, {MOD(lr_x, POW2(k)), lr_y});
+			hist_right = s.buildHist({ul_x, ul_y}, {POW2(k)-1, lr_y});
+			area_right = s.rectArea({ul_x, ul_y}, {POW2(k)-1, lr_y});
+		}
+		for(int i=0; i<36;i++){
+				hist_all[i] = hist_left[i] + hist_right[i];
+		}
+		return s.entropy(hist_all, area_left+area_right);
+	}
+
+	// x bounded
+	else if(ul_x >= 0 && lr_x < POW2(k)){
+		vector<int> hist_upper, hist_lower, hist_all;
+		hist_all.resize(36);
+		double area_upper, area_lower;
+		if(ul_y<0){
+			hist_upper = s.buildHist({ul_x, 0}, {lr_x, lr_y});
+			area_upper = s.rectArea({ul_x, 0}, {lr_x, lr_y});
+			hist_lower = s.buildHist({ul_x, MOD(ul_y, POW2(k))}, {lr_x, POW2(k)-1});
+			area_lower = s.rectArea({ul_x, MOD(ul_y, POW2(k))}, {lr_x, POW2(k)-1});
+		}
+		else{
+			hist_upper = s.buildHist({ul_x, 0}, {lr_x, MOD(lr_y, POW2(k))});
+			area_upper = s.rectArea({ul_x, 0}, {lr_x, MOD(lr_y, POW2(k))});
+			hist_lower = s.buildHist({ul_x, ul_y}, {lr_x, POW2(k)-1});
+			area_lower = s.rectArea({ul_x, ul_y}, {lr_x, POW2(k)-1});
+		}
+		for(int i=0; i<36;i++){
+			hist_all[i] = hist_upper[i] + hist_lower[i];
+		}
+		return s.entropy(hist_all, area_upper+area_lower);
+	}
+
+	// neither bounded
+	else{
+		vector<int> hist_UL, hist_UR, hist_LL, hist_LR, hist_all;
+		hist_all.resize(36);
+		double area_UL, area_UR, area_LL, area_LR;
+		pair<int, int> UL_ul = {MOD(ul_x, POW2(k)), MOD(ul_y, POW2(k))};
+		pair<int, int> LR_lr = {MOD(lr_x, POW2(k)), MOD(lr_y, POW2(k))};
+		pair<int, int> LL_ul = {MOD(ul_x, POW2(k)), 0};
+		pair<int, int> UR_ul = {0, MOD(ul_y, POW2(k))};
+		hist_LR = s.buildHist({0, 0}, LR_lr);
+		area_LR = s.rectArea({0, 0}, LR_lr);
+		hist_LL = s.buildHist(LL_ul, {POW2(k)-1, LR_lr.second});
+		area_LL = s.rectArea(LL_ul, {POW2(k)-1, LR_lr.second});
+		hist_UR = s.buildHist(UR_ul, {LR_lr.first, POW2(k)-1});
+		area_UR = s.rectArea(UR_ul, {LR_lr.first, POW2(k)-1});
+		hist_UL = s.buildHist(UL_ul, {POW2(k)-1, POW2(k)-1});
+		area_UL = s.rectArea(UL_ul, {POW2(k)-1, POW2(k)-1});
+		for(int i=0; i<36; i++){
+			hist_all[i] = hist_UL[i] + hist_UR[i] + hist_LL[i] + hist_LR[i];
+		}
+		return s.entropy(hist_all, area_LL+area_LR+area_UL+area_UR);
+	}
+}
+
 double toqutree::averageEntropy(stats &s, int k, int ctr_x, int ctr_y){
-	return 0.0;
+	// build histograms for each of the four sub-squares
+	return (totalEntropy(s, k, ctr_x, ctr_y) // SE
+					+ totalEntropy(s, k, ctr_x-POW2(k), ctr_y) // SW
+					+ totalEntropy(s, k, ctr_x, ctr_y-POW2(k)) // NE
+					+ totalEntropy(s, k, ctr_x-POW2(k), ctr_y-POW2(k))) // NW
+					/ 4.0;
 }
 
 void toqutree::buildImages(PNG* im, int ctr_x, int ctr_y, PNG *imgNW, PNG *imgNE, PNG *imgSE, PNG *imgSW){
-	
+	// TODO
 }
 
 toqutree::Node* toqutree::buildTree(PNG * im, int k) {
@@ -90,10 +181,10 @@ toqutree::Node* toqutree::buildTree(PNG * im, int k) {
 		else{
 			double avg_entropy;
 			double avg_entropy_min = DBL_MAX;
-			for(unsigned int y=((POW2(k)-POW2(k-1))/2); y<((POW2(k)+POW2(k-1))/2); y++){
-				for(unsigned int x=((POW2(k)-POW2(k-1))/2); x<((POW2(k)+POW2(k-1))/2); x++){
+			for(int x=((POW2(k)-POW2(k-1))/2); x<((POW2(k)+POW2(k-1))/2); x++){
+				for(int y=((POW2(k)-POW2(k-1))/2); y<((POW2(k)+POW2(k-1))/2); y++){
 					avg_entropy = averageEntropy(s, k, x, y);
-					if(avg_entropy <= avg_entropy_min){
+					if(avg_entropy < avg_entropy_min){
 						root->center = {x, y};
 					}
 				}

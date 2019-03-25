@@ -12,11 +12,13 @@
 #include <utility>
 #include <cmath>
 #include <float.h>
+#include <assert.h>
 #include "cs221util/PNG.h"
 #include "cs221util/HSLAPixel.h"
 #include "stats.h"
 
-#define POW2(k) (unsigned int)pow(2, k)
+#define POW2(k) (int)pow(2, k)
+#define MOD(a, b) (int)((a % b + b) % b)
 
 using namespace std;
 using namespace cs221util;
@@ -196,10 +198,20 @@ private:
     * parent square about (ctr_x, ctr_y). 
     * @param s stats of the parent square.
     * @param k dimension of the parent square. Requires k>=2.
-    * @param ctr_x ctr_y: split point. Requires (ctr_x, ctr_y) within (0,0)
+    * @param ctr_x ctr_y split point. Requires (ctr_x, ctr_y) within (0,0)
     *        to (2^k-1, 2^k-1).
     */
    double averageEntropy(stats &s, int k, int ctr_x, int ctr_y);
+
+   /**
+    * Returns the total entropy of the square whose upper-left corner
+    * is at (ul_x, ul_y) of the parent square.
+    * @param s stats of the parent square image.
+    * @param k dimension of the parent square. Requires k>=2.
+    * @param ul_x ul_y upper-left corner coordinate of the square. Each
+    *        coordinate may be <0 or >=2^k due to wrapping.
+    */
+   double totalEntropy(stats &s, int k, int ul_x, int ul_y);
 
    /**
     * Build images of the four squares after splitting the parent square,
