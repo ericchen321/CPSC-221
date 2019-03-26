@@ -44,8 +44,8 @@ toqutree::toqutree(PNG & imIn, int k){
 
 	for(int y=0; y<POW2(k); y++){
 		for(int x=0; x<POW2(k); x++){
-			*(im->getPixel((unsigned int)x, (unsigned int)y)) = 
-			*(imIn.getPixel((unsigned int)(x_offset+x), (unsigned int)(y_offset+y)));
+			*(im->getPixel(x, y)) = 
+			*(imIn.getPixel((x_offset+x), (y_offset+y)));
 		}
 	}
 
@@ -61,14 +61,13 @@ double toqutree::totalEntropy(stats &s, int k, int ul_x, int ul_y){
 	assert(k>=2);
 
 	int lr_x = ul_x + POW2(k-1) - 1;
-	int lr_y = lr_y + POW2(k-1) - 1;
-	double area, entropy;
+	int lr_y = ul_y + POW2(k-1) - 1;
 
 	// both bounded
 	if(ul_x >= 0 && lr_x < POW2(k)
 			&& ul_y >= 0 && lr_y < POW2(k)){
 		vector<int> hist_all = s.buildHist({ul_x, ul_y}, {lr_x, lr_y});
-		area = s.rectArea({ul_x, ul_y}, {lr_x, lr_y});
+		double area = s.rectArea({ul_x, ul_y}, {lr_x, lr_y});
 		return s.entropy(hist_all, area);
 	}
 
@@ -145,14 +144,29 @@ double toqutree::totalEntropy(stats &s, int k, int ul_x, int ul_y){
 double toqutree::averageEntropy(stats &s, int k, int ctr_x, int ctr_y){
 	// build histograms for each of the four sub-squares
 	return (totalEntropy(s, k, ctr_x, ctr_y) // SE
-					+ totalEntropy(s, k, ctr_x-POW2(k), ctr_y) // SW
-					+ totalEntropy(s, k, ctr_x, ctr_y-POW2(k)) // NE
-					+ totalEntropy(s, k, ctr_x-POW2(k), ctr_y-POW2(k))) // NW
+					+ totalEntropy(s, k, ctr_x-POW2(k-1), ctr_y) // SW
+					+ totalEntropy(s, k, ctr_x, ctr_y-POW2(k-1)) // NE
+					+ totalEntropy(s, k, ctr_x-POW2(k-1), ctr_y-POW2(k-1))) // NW
 					/ 4.0;
 }
 
-void toqutree::buildImages(PNG* im, int ctr_x, int ctr_y, PNG *imgNW, PNG *imgNE, PNG *imgSE, PNG *imgSW){
-	// TODO
+void toqutree::buildImage(PNG* im, int k, int ul_x, int ul_y, PNG * &img){
+	int side_length = POW2(k-1);
+	img = new PNG(side_length, side_length);
+
+	for(int y=0; y<side_length; y++){
+		for(int x=0; x<side_length; x++){
+			*(img->getPixel(x, y)) =  *(im->getPixel(MOD(ul_x+x, POW2(k)), MOD(ul_y+y, POW2(k))));	
+		}
+	}
+}
+
+void toqutree::buildImages(PNG* im, int k, int ctr_x, int ctr_y, PNG * &imgNW, PNG * &imgNE, PNG * &imgSE, PNG * &imgSW){
+	// build individual images
+	buildImage(im, k, ctr_x, ctr_y, imgSE); // SE
+	buildImage(im, k, ctr_x-POW2(k-1), ctr_y, imgSW); // SW
+	buildImage(im, k, ctr_x, ctr_y-POW2(k-1), imgNE); // NE
+	buildImage(im, k, ctr_x-POW2(k-1), ctr_y-POW2(k-1), imgNW); //NW
 }
 
 toqutree::Node* toqutree::buildTree(PNG * im, int k) {
@@ -166,17 +180,17 @@ toqutree::Node* toqutree::buildTree(PNG * im, int k) {
 // declare a dynamically allocated stats object, and free it
 // once you've used it to choose a split point, and calculate
 // an average.
-	// initialize the root node
+	// initialize the croot node
 	stats s(*(im));
 	int dim = k;
 	HSLAPixel avg = s.getAvg({0,0}, {POW2(k)-1, POW2(k)-1});
-	Node* root = new Node({0, 0}, dim, avg);
+	Node* croot = new Node({0, 0}, dim, avg);
 
 	// recursive case: given node is not a pixel
 	if(k > 0){
 		// find the split point
 		if(k == 1){
-			root->center = {1, 1};
+			croot->center = {1, 1};
 		}
 		else{
 			double avg_entropy;
@@ -185,7 +199,7 @@ toqutree::Node* toqutree::buildTree(PNG * im, int k) {
 				for(int y=((POW2(k)-POW2(k-1))/2); y<((POW2(k)+POW2(k-1))/2); y++){
 					avg_entropy = averageEntropy(s, k, x, y);
 					if(avg_entropy < avg_entropy_min){
-						root->center = {x, y};
+						croot->center = {x, y};
 					}
 				}
 			}
@@ -193,19 +207,19 @@ toqutree::Node* toqutree::buildTree(PNG * im, int k) {
 
 		// build images for the four children
 		PNG* imgNW; PNG* imgNE; PNG* imgSE; PNG* imgSW;
-		buildImages(im, root->center.first, root->center.second, imgNW, imgNE, imgSE, imgSW);
+		buildImages(im, k, croot->center.first, croot->center.second, imgNW, imgNE, imgSE, imgSW);
 
 		// build the sub-trees
-		root->NW = buildTree(imgNW, k/2);
-		root->NE = buildTree(imgNE, k/2);
-		root->SE = buildTree(imgSE, k/2);
-		root->SW = buildTree(imgSW, k/2);
+		croot->NW = buildTree(imgNW, k/2);
+		croot->NE = buildTree(imgNE, k/2);
+		croot->SE = buildTree(imgSE, k/2);
+		croot->SW = buildTree(imgSW, k/2);
 	}
 
-	// clear the root's image
+	// clear the croot's image
 	delete(im);
 
-	return root;
+	return croot;
 }
 
 PNG toqutree::render(){
@@ -215,19 +229,62 @@ PNG toqutree::render(){
 // quadtree, instead.
 
 /* your code here */
+	// TODO
+	return *(new PNG());
+}
 
+bool toqutree::allInTolerence(Node * croot, HSLAPixel pixel, double tol){
+	assert(croot != NULL);
+
+	// base case: node is a pixel
+	if(croot->dimension == 0){
+		return (pixel.dist(croot->avg) <= tol);
+	}
+	
+	// recursive case: node is a square
+	return (allInTolerence(croot->NE, pixel, tol)
+					&& allInTolerence(croot->NW, pixel, tol)
+					&& allInTolerence(croot->SE, pixel, tol)
+					&& allInTolerence(croot->SW, pixel, tol));
+}
+
+void toqutree::makeLeaf(Node * croot){
+	clear(croot->NE); 
+	clear(croot->NW); 
+	clear(croot->SE);
+	clear(croot->SW);
+}
+
+void toqutree::prune(Node * & croot, double tol){
+	if(allInTolerence(croot, croot->avg, tol)){
+		makeLeaf(croot);
+	}
+	else{
+		prune(croot->NE, tol);
+		prune(croot->NW, tol);
+		prune(croot->SE, tol);
+		prune(croot->SW, tol);
+	}
 }
 
 /* oops, i left the implementation of this one in the file! */
 void toqutree::prune(double tol){
-
-	//prune(root,tol);
-
+	prune(root,tol);
 }
 
 /* called by destructor and assignment operator*/
 void toqutree::clear(Node * & curr){
 /* your code here */
+	// FIXME: why the heck am I not using private helper???
+	if(curr == NULL)
+		return;
+	
+	clear(curr->NE);
+	clear(curr->NW);
+	clear(curr->SE);
+	clear(curr->SW);
+	delete(curr);
+	curr = NULL;
 }
 
 /* done */
@@ -235,6 +292,17 @@ void toqutree::clear(Node * & curr){
 toqutree::Node * toqutree::copy(const Node * other) {
 
 /* your code here */
+	// FIXME: well not using helper...
+	if(other == NULL){
+		return NULL;
+	}
+
+	Node* new_node = new Node(other->center, other->dimension, other->avg);
+	new_node->NE = copy(other->NE);
+	new_node->NW = copy(other->NW);
+	new_node->SE = copy(other->SE);
+	new_node->SW = copy(other->SW);
+	return new_node;
 }
 
 

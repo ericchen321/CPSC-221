@@ -216,15 +216,39 @@ private:
    /**
     * Build images of the four squares after splitting the parent square,
     * represented by im.
-    * @param: im ptr to parent square's image.
+    * @param im ptr to parent square's image.
+    * @param k parent square's dimension.
     * @param ctr_x ctr_y split point. Requires being a well-defined pt in
     *        im.
     * @param imgNW, imgNE, imgSE, imgSW ptr to images of four child squares.
-    *        The function should initialize and modify the images they 
-    *        point to.
+    *        The function should initialize the image pointers it takes.
     */
-   void buildImages(PNG* im, int ctr_x, int ctr_y, PNG *imgNW, PNG *imgNE, PNG *imgSE, PNG *imgSW);
+   void buildImages(PNG* im, int k, int ctr_x, int ctr_y, PNG * &imgNW, PNG * &imgNE, PNG * &imgSE, PNG * &imgSW);
 
+   /**
+    * Build image of a sub-square from image of the parent square.
+    * @param im ptr to parent square's image.
+    * @param k parent square's dimension.
+    * @param ul_x ul_y ul_x ul_y upper-left corner coordinate of the square. Each
+    *        coordinate may be <0 or >=2^k due to wrapping.
+    * @param img pointer to the sub-square's image. Should be initialized by this
+    *        function.
+    */
+   void buildImage(PNG* im, int k, int ul_x, int ul_y, PNG* &img);
+
+   /* Helper for the public prune method. Prune the given tree with given 
+    * tolerence.
+    */
+   void prune(Node * & croot, double tol);
+
+   /* Returns true if all pixels in the tree under croot are within
+    * tolerence of the given pixel. False if not.
+    */
+   bool allInTolerence(Node * croot, HSLAPixel pixel, double tol);
+
+   /* Makes the given croot node a leaf node. 
+    */ 
+   void makeLeaf(Node * croot);
    /* =================== end of private PA3 functions ============== */
 };
 
