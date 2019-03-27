@@ -249,6 +249,19 @@ private:
    /* Makes the given croot node a leaf node. 
     */ 
    void makeLeaf(Node * croot);
+
+   /* Private helper function for render(). Renders all pixels in the given
+    * tree on the given canvas.
+    * @param croot root of the given tree. May or may not be a leaf.
+    * @param uls list of (ul_x, ul_y) of squares along the split path, from
+    *        the 0th split at (0, 0) to the most recent split which yields
+    *        croot. The list should have at least one pair. The points may
+    *        be beyond the border of given canvas due to wrapping.
+    * @param img ptr to PNG where the tree is rendered. Required being
+    *        initialized and larger or equal to the size defined by croot's
+    *        dimension.
+    */
+   void render(Node * croot, vector<pair<int, int>>uls, PNG * img);
    /* =================== end of private PA3 functions ============== */
 };
 

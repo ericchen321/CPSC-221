@@ -222,6 +222,47 @@ toqutree::Node* toqutree::buildTree(PNG * im, int k) {
 	return croot;
 }
 
+void toqutree::render(Node * croot, vector<pair<int, int>>uls, PNG * img){
+	if(croot == NULL){
+		return;
+	}
+
+	// leaf node: drawing pixels
+	if(croot->NE==NULL && croot->NW==NULL && croot->SE==NULL && croot->SW==NULL){
+		int side_length = POW2(croot->dimension);
+		int map_count = uls.size();
+		for(int y=0; y<side_length; y++){
+			for(int x=0; x<side_length; x++){
+				int x_global = x;
+				int y_global = y;
+				for(int i=0; i<map_count; i++){
+					x_global += uls[map_count-i-1].first;
+					x_global %= POW2(croot->dimension+i);
+					y_global += uls[map_count-i-1].second;
+					y_global %=  POW2(croot->dimension+i);
+				}
+				assert(x_global>=0 && x_global<(int)img->width() && y_global>=0 && y_global<(int)img->height());
+				*(img->getPixel(x_global, y_global)) = croot->avg;
+			}
+		}
+	}
+
+	// non-leaf node: render sub-squares
+	{
+		int ctr_x = croot->center.first;
+		int ctr_y = croot->center.second;
+		int k = croot->dimension;
+		vector<pair<int, int>> ne = uls; ne.push_back({ctr_x, ctr_y-POW2(k-1)});
+		render(croot->NE, ne, img);
+		vector<pair<int, int>> nw = uls; nw.push_back({ctr_x-POW2(k-1), ctr_y-POW2(k-1)});
+		render(croot->NW, nw, img);
+		vector<pair<int, int>> se = uls; se.push_back({ctr_x, ctr_y});
+		render(croot->SE, se, img);
+		vector<pair<int ,int>> sw = uls; sw.push_back({ctr_x-POW2(k-1), ctr_y});
+		render(croot->SW, sw, img);
+	}
+}
+
 PNG toqutree::render(){
 
 // My algorithm for this problem included a helper function
@@ -229,8 +270,10 @@ PNG toqutree::render(){
 // quadtree, instead.
 
 /* your code here */
-	// TODO
-	return *(new PNG());
+	PNG canvas(POW2(root->dimension), POW2(root->dimension));
+	vector<pair<int, int>> init_ul; init_ul.push_back({0, 0});
+	render(root, init_ul, &canvas);
+	return canvas;
 }
 
 bool toqutree::allInTolerence(Node * croot, HSLAPixel pixel, double tol){
