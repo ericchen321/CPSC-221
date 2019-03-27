@@ -83,8 +83,8 @@ double toqutree::totalEntropy(stats &s, int k, int ul_x, int ul_y){
 			area_right = s.rectArea({MOD(ul_x, POW2(k)), ul_y}, {POW2(k)-1, lr_y});
 		}
 		else{
-			hist_left = s.buildHist({0, ul_x}, {MOD(lr_x, POW2(k)), lr_y});
-			area_left = s.rectArea({0, ul_x}, {MOD(lr_x, POW2(k)), lr_y});
+			hist_left = s.buildHist({0, ul_y}, {MOD(lr_x, POW2(k)), lr_y});
+			area_left = s.rectArea({0, ul_y}, {MOD(lr_x, POW2(k)), lr_y});
 			hist_right = s.buildHist({ul_x, ul_y}, {POW2(k)-1, lr_y});
 			area_right = s.rectArea({ul_x, ul_y}, {POW2(k)-1, lr_y});
 		}
@@ -210,10 +210,10 @@ toqutree::Node* toqutree::buildTree(PNG * im, int k) {
 		buildImages(im, k, croot->center.first, croot->center.second, imgNW, imgNE, imgSE, imgSW);
 
 		// build the sub-trees
-		croot->NW = buildTree(imgNW, k/2);
-		croot->NE = buildTree(imgNE, k/2);
-		croot->SE = buildTree(imgSE, k/2);
-		croot->SW = buildTree(imgSW, k/2);
+		croot->NW = buildTree(imgNW, k-1);
+		croot->NE = buildTree(imgNE, k-1);
+		croot->SE = buildTree(imgSE, k-1);
+		croot->SW = buildTree(imgSW, k-1);
 	}
 
 	// clear the croot's image

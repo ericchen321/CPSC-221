@@ -19,7 +19,7 @@ int main()
 	origIm1.readFromFile("images/canadaPlace.png");
 
 	// use it to build a toqutree
-	toqutree t1(origIm1,3);
+	toqutree t1(origIm1,8);
 
     // make some copies for pruning tests
 	toqutree tCopy1(t1);
