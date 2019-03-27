@@ -109,6 +109,8 @@ HSLAPixel stats::getAvg(pair<int,int> ul, pair<int,int> lr){
     }
 
     double avg_hue = toDeg(atan2((sumHY/area), (sumHX/area)));
+    if(avg_hue < 0)
+        avg_hue += 360.0;
 
     HSLAPixel pixel = HSLAPixel(avg_hue, sumS/area, sumL/area, 1.0);
 
