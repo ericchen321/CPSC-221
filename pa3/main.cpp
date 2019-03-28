@@ -14,6 +14,13 @@ using namespace std;
 
 int main()
 {
+	PNG origIm0;
+	origIm0.readFromFile("images/smB.png");
+	toqutree t0(origIm0, 3);
+	PNG ppic0 = t0.render();
+	ppic0.writeToFile("images/output-smB.png");
+
+	/*
 	// read in an image
 	PNG origIm1;
 	origIm1.readFromFile("images/canadaPlace.png");
@@ -48,7 +55,19 @@ int main()
 	ppiccopy2.writeToFile("images/output-CP.1.png");
 	ppiccopy3.writeToFile("images/output-CP.05.png");
 	ppiccopy4.writeToFile("images/output-CP.025.png");
+	*/
+	PNG origIm2;
+	origIm2.readFromFile("images/ada.png");
+	toqutree t2(origIm2, 9);
+	t2.prune(0.05);
+	PNG ppic2 = t2.render();
+	ppic2.writeToFile("images/output-adaPrune-.05.png");
 
+	PNG origIm3;
+	origIm3.readFromFile("images/stanleySquare.png");
+	toqutree t3(origIm3, 9);
+	PNG ppic3 = t3.render();
+	ppic3.writeToFile("images/output-stanleySquare.png");
 
   return 0;
 }
