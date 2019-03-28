@@ -142,6 +142,8 @@ double toqutree::totalEntropy(stats &s, int k, int ul_x, int ul_y){
 }
 
 double toqutree::averageEntropy(stats &s, int k, int ctr_x, int ctr_y){
+	assert(ctr_x>=0 && ctr_x<POW2(k) && ctr_y>=0 && ctr_y<POW2(k));
+
 	// build histograms for each of the four sub-squares
 	return (totalEntropy(s, k, ctr_x, ctr_y) // SE
 					+ totalEntropy(s, k, ctr_x-POW2(k-1), ctr_y) // SW
@@ -183,7 +185,13 @@ toqutree::Node* toqutree::buildTree(PNG * im, int k) {
 	// initialize the croot node
 	stats s(*(im));
 	int dim = k;
+	//cout << "building tree of k = " << k << endl;
 	HSLAPixel avg = s.getAvg({0,0}, {POW2(k)-1, POW2(k)-1});
+	/*
+	if(k==0){
+		cout << "tree buildin " << "hue: " << avg.h << " sat: " << avg.s << " lum: " << avg.l << endl;
+	}
+	*/
 	Node* croot = new Node({0, 0}, dim, avg);
 
 	// recursive case: given node is not a pixel
@@ -200,6 +208,7 @@ toqutree::Node* toqutree::buildTree(PNG * im, int k) {
 					avg_entropy = averageEntropy(s, k, x, y);
 					if(avg_entropy < avg_entropy_min){
 						croot->center = {x, y};
+						avg_entropy_min = avg_entropy;
 					}
 				}
 			}
@@ -235,20 +244,24 @@ void toqutree::render(Node * croot, vector<pair<int, int>>uls, PNG * img){
 			for(int x=0; x<side_length; x++){
 				int x_global = x;
 				int y_global = y;
+				//cout << "x = " << x << ", y = " << y << endl;
 				for(int i=0; i<map_count; i++){
 					x_global += uls[map_count-i-1].first;
-					x_global %= POW2(croot->dimension+i);
+					x_global = MOD(x_global, POW2(croot->dimension+i+1));
 					y_global += uls[map_count-i-1].second;
-					y_global %=  POW2(croot->dimension+i);
+					y_global = MOD(y_global, POW2(croot->dimension+i+1));
+					//cout << "i= " << i << " array idx: " << (map_count-i-1) << " ul x: " << uls[map_count-i-1].first << " ul y:" << uls[map_count-i-1].second << " x global: " << x_global << " y global:" << y_global << endl;
 				}
 				assert(x_global>=0 && x_global<(int)img->width() && y_global>=0 && y_global<(int)img->height());
+
+				//cout << "renderin " << x_global << "," << y_global << "," << "hue: " << croot->avg.h << " sat: " << croot->avg.s << " lum: " << croot->avg.l << endl;
 				*(img->getPixel(x_global, y_global)) = croot->avg;
 			}
 		}
 	}
 
 	// non-leaf node: render sub-squares
-	{
+	else {
 		int ctr_x = croot->center.first;
 		int ctr_y = croot->center.second;
 		int k = croot->dimension;
