@@ -13,24 +13,33 @@ stats::stats(PNG & im){
     hist.resize(height);
 
     for(int i=0; i<height; i++){
+        sumHueX[i].resize(width);
+        sumHueY[i].resize(width);
+        sumSat[i].resize(width);
+        sumLum[i].resize(width);
+
         for(int j=0; j<width; j++){
-            if(i==0 && j==0){
-                sumHueX[i].push_back(cos(toRad(im.getPixel(j, i)->h)));
-                sumHueY[i].push_back(sin(toRad(im.getPixel(j, i)->h)));
-                sumSat[i].push_back(im.getPixel(j, i)->s);
-                sumLum[i].push_back(im.getPixel(j, i)->l);
+            sumHueX[i][j] = cos(toRad(im.getPixel(j, i)->h));
+            sumHueY[i][j] = sin(toRad(im.getPixel(j, i)->h));
+            sumSat[i][j] = im.getPixel(j, i)->s;
+            sumLum[i][j] = im.getPixel(j, i)->l;
+            if(i>0){
+                sumHueX[i][j] += sumHueX[i-1][j];
+                sumHueY[i][j] += sumHueY[i-1][j];
+                sumSat[i][j] += sumSat[i-1][j];
+                sumLum[i][j] += sumLum[i-1][j];
             }
-            else if(j==0){
-                sumHueX[i].push_back(cos(toRad(im.getPixel(j, i)->h)) + sumHueX[i-1][width-1]);
-                sumHueY[i].push_back(sin(toRad(im.getPixel(j, i)->h)) + sumHueY[i-1][width-1]);
-                sumSat[i].push_back(im.getPixel(j, i)->s + sumSat[i-1][width-1]);
-                sumLum[i].push_back(im.getPixel(j, i)->l + sumLum[i-1][width-1]);
+            if(j>0){
+                sumHueX[i][j] += sumHueX[i][j-1];
+                sumHueY[i][j] += sumHueY[i][j-1];
+                sumSat[i][j] += sumSat[i][j-1];
+                sumLum[i][j] += sumLum[i][j-1];
             }
-            else{
-                sumHueX[i].push_back(cos(toRad(im.getPixel(j, i)->h)) + sumHueX[i][j-1]);
-                sumHueY[i].push_back(sin(toRad(im.getPixel(j, i)->h)) + sumHueY[i][j-1]);
-                sumSat[i].push_back(im.getPixel(j, i)->s + sumSat[i][j-1]);
-                sumLum[i].push_back(im.getPixel(j, i)->l +sumLum[i][j-1]);
+            if(i>0 && j>0){
+                sumHueX[i][j] -= sumHueX[i-1][j-1];
+                sumHueY[i][j] -= sumHueY[i-1][j-1];
+                sumSat[i][j] -= sumSat[i-1][j-1];
+                sumLum[i][j] -= sumLum[i-1][j-1];
             }
         }
     }
