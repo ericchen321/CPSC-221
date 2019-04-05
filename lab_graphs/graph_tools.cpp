@@ -24,11 +24,20 @@ int GraphTools::findMinWeight(Graph& graph)
 {
     // 1. Label all edges and vertices as unexplored. You will need 
     //    to look in graph.h for the right functions.
+    vector<Edge> edges = graph.getEdges();
+    for(size_t i=0; i<edges.size(); i++){
+        graph.setEdgeLabel(edges[i].source, edges[i].dest, "UNEXPLORED");
+    }
+    vector<Vertex> verticies = graph.getVertices();
+    for(size_t i=0; i<verticies.size(); i++){
+        graph.setVertexLabel(verticies[i], "UNEXPLORED");
+    }
     
     // 2. Use the BFS function in graph_tools to find the minimum edge. 
     //    Don't forget to label it.
-
-    return -1;
+    Edge minWeightEdge = BFS(graph, verticies[0]);
+    graph.setEdgeLabel(minWeightEdge.source, minWeightEdge.dest, "MIN");
+    return minWeightEdge.weight;
 }
 
 /**
@@ -54,17 +63,56 @@ int GraphTools::findMinWeight(Graph& graph)
 int GraphTools::findShortestPath(Graph& graph, Vertex start, Vertex end)
 {
     unordered_map<Vertex, Vertex> parent;
-    
-    // 1. Set all vertices as unexplored
+    // FIXME: now handles only the case where a path can be found
+    // 1. Set all vertices as unexplored FIXME: probably should also set
+    // all edges as unexpolored?
+    vector<Edge> edges = graph.getEdges();
+    for(size_t i=0; i<edges.size(); i++){
+        graph.setEdgeLabel(edges[i].source, edges[i].dest, "UNEXPLORED");
+    }
+    vector<Vertex> verticies = graph.getVertices();
+    for(size_t i=0; i<verticies.size(); i++){
+        graph.setVertexLabel(verticies[i], "UNEXPLORED");
+    }
     
     // 2. Do a modified BFS. See the BFS function below as a guideline, but 
     //    your BFS here only needs to populate the "parent" map and stop once the short-
     //    est path has been found.
+    queue<Vertex> q;
+    graph.setVertexLabel(start, "VISITED");
+    q.push(start);
+
+    while (!q.empty()) {
+        Vertex v = q.front();
+        q.pop();
+        vector<Vertex> adj = graph.getAdjacent(v);
+        for (size_t i = 0; i < adj.size(); ++i) {
+            if (graph.getVertexLabel(adj[i]) == "UNEXPLORED") {
+                graph.setEdgeLabel(v, adj[i], "DISCOVERY");
+                graph.setVertexLabel(adj[i], "VISITED");
+                q.push(adj[i]);
+                parent[adj[i]] = v;
+                if(adj[i] == end){
+                    break;
+                }
+            } else if (graph.getEdgeLabel(v, adj[i]) == "UNEXPLORED") {
+                graph.setEdgeLabel(v, adj[i], "CROSS");
+            }
+        }
+    }
     
     // 3. Use the unordered map to trace from a path from the end to the start, 
     //    counting edges. You should set edges to "minpath" here too.
-
-    return -1;
+    Vertex curr = end;
+    int counter = 0;
+    while(curr != start){
+        Vertex prev = curr;
+        auto iter = parent.find(curr);
+        curr = iter->second;
+        graph.setEdgeLabel(curr, prev, "MINPATH");
+        counter += 1;
+    }
+    return counter;
 }
 
 /**
@@ -83,6 +131,13 @@ int GraphTools::findShortestPath(Graph& graph, Vertex start, Vertex end)
 void GraphTools::findMST(Graph& graph)
 {
     /* your code here! */
+    vector<Vertex> verticies = graph.getVertices();
+
+    // initializes the disjoint set
+    DisjointSets SetOfverticies;
+    SetOfverticies.addelements(verticies.size());
+
+    // TODO
 }
 
 /**
